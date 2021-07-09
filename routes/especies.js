@@ -18,4 +18,30 @@ router.post('/', async (req, res) => {
     });
 });
 
+router.get("/", (req, res) => {
+    Especie.find().then(especies => res.send(especies)).catch((error) => {
+        res.status(500).send("Não foi possível listar as espécies");
+    })
+});
+
+router.get("/:id", async (req, res) => {
+    const especie = await Especie.findById(req.params.id);
+    if(!especie) res.status(404).send('Espécie não encontrada');
+    res.send(especie);
+});
+
+router.put("/:id", async (req, res) => {
+    const especie = await Especie.findByIdAndUpdate(req.params.id, {
+        nome: req.body.nome
+    }, {new: true}); 
+    if(!especie) res.status(404).send('Espécie não encontrada');   
+    res.send(especie);
+});
+
+router.delete("/:id", async (req, res) => {
+    const especie = await Especie.findByIdAndRemove(req.params.id); 
+    if(!especie) res.status(404).send('Espécie não encontrada');   
+    res.send(especie);
+});
+
 module.exports = router;

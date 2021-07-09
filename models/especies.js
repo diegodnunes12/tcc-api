@@ -20,5 +20,7 @@ const validate = especie => {
     });
 }
 
+
+
 exports.Especie = new mongoose.model('Especie', EspecieSchema);
 exports.validate = validate;
