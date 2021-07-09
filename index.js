@@ -4,6 +4,9 @@ const winston = require('winston');
 const app = express();
 require('dotenv').config();
 const especieRouter = require('./routes/especies');
+const porteRouter = require('./routes/portes');
+const ongRouter = require('./routes/ongs');
+const animalRouter = require('./routes/animais');
 
 const PORT = process.env.PORT || 3000;
 
@@ -26,6 +29,9 @@ const logger = winston.createLogger({
 });
 
 app.use('/api/especies', especieRouter);
+app.use('/api/portes', porteRouter);
+app.use('/api/ongs', ongRouter);
+app.use('/api/animais', animalRouter);
 
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser:true,
