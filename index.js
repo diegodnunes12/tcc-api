@@ -32,6 +32,8 @@ app.use(routers.ongs);
 app.use(routers.usuarios);
 app.use(routers.tipoUsuarioOng);
 app.use(routers.usuarioOng);
+app.use(routers.contatos);
+app.use(routers.mensagens);
 
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser:true,
