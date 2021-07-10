@@ -1,34 +1,40 @@
-const mongoose = require('mongoose');
-const yup = require('yup');
-const { ObjectId } = require('mongodb')
+const mongoose = require("mongoose");
+const validator = require('validator');
 
-const AnimalSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+
+const animalSchema = new Schema ({
     nome: {
         type: String,
         required:true,
         minlength: 3,
-        maxlength: 50
+        maxlength: 50,
+        trim: true
     },
     pelagem: {
         type: String,
         required:false,
-        maxlength: 50
+        maxlength: 50,
+        trim: true
     },
     sexo: {
         type: String,
         required:true,
         minlength: 3,
-        maxlength: 10
+        maxlength: 10,
+        trim: true
     },
     raca: {
         type: String,
         required:false,
-        maxlength: 50
+        maxlength: 50,
+        trim: true
     },
     historia: {
         type: String,
         required:false,
-        maxlength: 500
+        maxlength: 500,
+        trim: true
     },
     castrado: {
         type: Boolean,
@@ -43,43 +49,31 @@ const AnimalSchema = new mongoose.Schema({
         required:true
     },
     ong_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Ong",
+        type: Schema.Types.ObjectId,
+        ref: "ong",
         required:true
     },
     especie_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Especie",
+        type: Schema.Types.ObjectId,
+        ref: "especie",
         required:true
     },
     porte_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Porte",
+        type: Schema.Types.ObjectId,
+        ref: "porte",
         required:true
     },
     data_cadastro: {
         type: Date,
-        required:true
+        required:true,
+        validator(value){
+            if(!validator.Date(value)){
+                throw new Error('Informe uma data válida');
+            }
+        }
     }
 });
 
-const validate = animal => {
-    const schema = yup.object().shape({
-        nome: yup.string().required().min(3, "O nome deve ser maior do que 3 caracteres").max(50, "O nome deve ser menor do que 50 caracteres"),
-        pelagem: yup.string().max(50, "A pelagem deve ser menor do que 50 caracteres"),
-        sexo: yup.string().required().max(10, "O sexo deve ser menor do que 10 caracteres"),
-        raca: yup.string().max(50, "A raça deve ser menor do que 50 caracteres"),
-        historia: yup.string().max(500, "A história deve ser menor do que 500 caracteres"),
-        castrado: yup.boolean().required(),
-        vacinado: yup.boolean().required(),
-        vermifugado: yup.boolean().required(),
-        data_cadastro: yup.string().required(),
-    });
+const animal = mongoose.model("animal", animalSchema);
 
-    return schema.validate(animal).then(animal => animal).catch((error) => {
-        return {message: error.message}
-    });
-}
-
-exports.Animal = new mongoose.model('Animal', AnimalSchema);
-exports.validate = validate;
+module.exports = animal;

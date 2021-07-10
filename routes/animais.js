@@ -1,69 +1,79 @@
 const express = require('express');
-const router = express.Router();
-const {Animal, validate} = require('../models/animais');
+const animal = require('../models/animais');
 
-router.post('/', async (req, res) => {
-    const error = await validate(req.body);
+const router = new express.Router();
 
-    if(error.message) res.status(400).send(error.message);
-
-    animal = new Animal({
-        nome:req.body.nome,
-        pelagem:req.body.pelagem,
-        sexo:req.body.sexo,
-        raca:req.body.raca,
-        historia:req.body.historia,
-        castrado:req.body.castrado,
-        vacinado:req.body.vacinado,
-        vermifugado:req.body.vermifugado,
-        ong_id:req.body.ong_id,
-        especie_id:req.body.especie_id,
-        porte_id:req.body.porte_id,
-        data_cadastro:req.body.data_cadastro,
-    });
-
-    animal.save().then(animal => {
-        res.send(animal);
-    }).catch(error => {
-        res.status(500).send("Animal não cadastrado");
-    });
+router.post('/animais', async (req, res) => {
+    const addAnimal = new animal(req.body);
+    try {
+        await addAnimal.save();
+        res.status(201).send(addAnimal);
+    } catch (error) {
+        res.status(400).send(error);
+    }
 });
 
-router.get("/", (req, res) => {
-    Animal.find().populate("Ong").populate("Porte").then(animais => res.send(animais)).catch((error) => {
-        res.status(500).send("Não foi possível listar os animais");
-    })
+router.get('/animais', async (req, res) => {
+    try {
+        const getAnimais = await animal.find({}).populate("portes");
+        res.status(200).send(getAnimais);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 });
 
-router.get("/:id", async (req, res) => {
-    const animal = await Animal.findById(req.params.id);
-    if(!animal) res.status(404).send('Animal não encontrado');
-    res.send(animal);
-});
+router.get('/animais/:id', async (req, res) => {
+    const _id = req.params.id;
+    try {
+        const getAnimal = await animal.findById(_id);
+        if(!getAnimal){
+            res.status(404).send('Animal não encontrado');
+        }
+        else{
+            res.status(200).send(getAnimal);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+} )
 
-router.put("/:id", async (req, res) => {
-    const animal = await Animal.findByIdAndUpdate(req.params.id, {
-        nome:req.body.nome,
-        pelagem:req.body.pelagem,
-        sexo:req.body.sexo,
-        raca:req.body.raca,
-        historia:req.body.historia,
-        castrado:req.body.castrado,
-        vacinado:req.body.vacinado,
-        vermifugado:req.body.vermifugado,
-        ong_id:req.body.ong_id,
-        especie_id:req.body.especie_id,
-        porte_id:req.body.porte_id,
-        data_cadastro:req.body.data_cadastro,
-    }, {new: true}); 
-    if(!animal) res.status(404).send('Animal não encontrado');   
-    res.send(animal);
-});
+router.patch('/animais/:id', async (req, res) => {    
+    const dataUpdate = Object.keys(req.body);
+    const allowedUpdate = ['nome', 'pelagem', 'sexo', 'raca', 'historia', 'castrado', 'vacinado', 'vermifugado', 'ong_id', 'especie_id', 'porte_id'];
+    const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
-router.delete("/:id", async (req, res) => {
-    const animal = await Animal.findByIdAndRemove(req.params.id); 
-    if(!animal) res.status(404).send('Animal não encontrado');   
-    res.send(animal);
-});
+    if(!isValidationOperation){
+        return res.status(400).send({error: 'Não foi possivel alterar algum campo especifico'});
+    }
+    else{
+        try {
+            const updateAnimal = await animal.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+
+            if(!updateAnimal){
+                return res.status(404).send('Animal não encontrado');
+            }
+            else{
+                res.send(updateAnimal);
+            }
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    }
+} )
+
+router.delete('/animais/:id', async (req, res) => {    
+    try {
+        const deleteAnimal = await animal.findByIdAndDelete(req.params.id);
+
+        if(!deleteAnimal){
+            return res.send(404).send('Animal não encontrado');
+        }
+        else{
+            res.send(deleteAnimal);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+} )
 
 module.exports = router;

@@ -1,45 +1,79 @@
 const express = require('express');
-const router = express.Router();
-const {Porte, validate} = require('../models/portes');
+const porte = require('../models/portes');
 
-router.post('/', async (req, res) => {
-    const error = await validate(req.body);
-    if(error.message) res.status(400).send(error.message);
-    porte = new Porte({
-        nome:req.body.nome
-    });
+const router = new express.Router();
 
-    porte.save().then(porte => {
-        res.send(porte);
-    }).catch(error => {
-        res.status(500).send("Porte não cadastrado");
-    });
+router.post('/portes', async (req, res) => {
+    const addPorte = new porte(req.body);
+    try {
+        await addPorte.save();
+        res.status(201).send(addPorte);
+    } catch (error) {
+        res.status(400).send(error);
+    }
 });
 
-router.get("/", (req, res) => {
-    Porte.find().then(portes => res.send(portes)).catch((error) => {
-        res.status(500).send("Não foi possível listar os portes");
-    })
+router.get('/portes', async (req, res) => {
+    try {
+        const getPortes = await porte.find({});
+        res.status(200).send(getPortes);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 });
 
-router.get("/:id", async (req, res) => {
-    const porte = await Porte.findById(req.params.id);
-    if(!porte) res.status(404).send('Porte não encontrado');
-    res.send(porte);
-});
+router.get('/portes/:id', async (req, res) => {
+    const _id = req.params.id;
+    try {
+        const getPorte = await porte.findById(_id);
+        if(!getPorte){
+            res.status(404).send('Porte não encontrado');
+        }
+        else{
+            res.status(200).send(getPorte);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+} )
 
-router.put("/:id", async (req, res) => {
-    const porte = await Porte.findByIdAndUpdate(req.params.id, {
-        nome: req.body.nome
-    }, {new: true}); 
-    if(!porte) res.status(404).send('Porte não encontrado');   
-    res.send(porte);
-});
+router.patch('/portes/:id', async (req, res) => {    
+    const dataUpdate = Object.keys(req.body);
+    const allowedUpdate = ['nome'];
+    const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
-router.delete("/:id", async (req, res) => {
-    const porte = await Porte.findByIdAndRemove(req.params.id); 
-    if(!porte) res.status(404).send('Porte não encontrado');   
-    res.send(porte);
-});
+    if(!isValidationOperation){
+        return res.status(400).send({error: 'Não foi possivel alterar algum campo especifico'});
+    }
+    else{
+        try {
+            const updatePorte = await porte.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+
+            if(!updatePorte){
+                return res.status(404).send('Porte não encontrado');
+            }
+            else{
+                res.send(updatePorte);
+            }
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    }
+} )
+
+router.delete('/portes/:id', async (req, res) => {    
+    try {
+        const deletePorte = await porte.findByIdAndDelete(req.params.id);
+
+        if(!deletePorte){
+            return res.send(404).send('Porte não encontrado');
+        }
+        else{
+            res.send(deletePorte);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+} )
 
 module.exports = router;

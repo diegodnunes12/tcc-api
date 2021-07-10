@@ -1,47 +1,79 @@
 const express = require('express');
-const router = express.Router();
-const {Especie, validate} = require('../models/especies');
+const especie = require('../models/especies');
 
-router.post('/', async (req, res) => {
-    const error = await validate(req.body);
+const router = new express.Router();
 
-    if(error.message) res.status(400).send(error.message);
-
-    especie = new Especie({
-        nome:req.body.nome
-    });
-
-    especie.save().then(especie => {
-        res.send(especie);
-    }).catch(error => {
-        res.status(500).send("Especie não cadastrada");
-    });
+router.post('/especies', async (req, res) => {
+    const addEspecie = new especie(req.body);
+    try {
+        await addEspecie.save();
+        res.status(201).send(addEspecie);
+    } catch (error) {
+        res.status(400).send(error);
+    }
 });
 
-router.get("/", (req, res) => {
-    Especie.find().then(especies => res.send(especies)).catch((error) => {
-        res.status(500).send("Não foi possível listar as espécies");
-    })
+router.get('/especies', async (req, res) => {
+    try {
+        const getEspecies = await especie.find({});
+        res.status(200).send(getEspecies);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 });
 
-router.get("/:id", async (req, res) => {
-    const especie = await Especie.findById(req.params.id);
-    if(!especie) res.status(404).send('Espécie não encontrada');
-    res.send(especie);
-});
+router.get('/especies/:id', async (req, res) => {
+    const _id = req.params.id;
+    try {
+        const getEspecie = await especie.findById(_id);
+        if(!getEspecie){
+            res.status(404).send('Espécie não encontrada');
+        }
+        else{
+            res.status(200).send(getEspecie);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+} )
 
-router.put("/:id", async (req, res) => {
-    const especie = await Especie.findByIdAndUpdate(req.params.id, {
-        nome: req.body.nome
-    }, {new: true}); 
-    if(!especie) res.status(404).send('Espécie não encontrada');   
-    res.send(especie);
-});
+router.patch('/especies/:id', async (req, res) => {    
+    const dataUpdate = Object.keys(req.body);
+    const allowedUpdate = ['nome'];
+    const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
-router.delete("/:id", async (req, res) => {
-    const especie = await Especie.findByIdAndRemove(req.params.id); 
-    if(!especie) res.status(404).send('Espécie não encontrada');   
-    res.send(especie);
-});
+    if(!isValidationOperation){
+        return res.status(400).send({error: 'Não foi possivel alterar algum campo especifico'});
+    }
+    else{
+        try {
+            const updateEspecie = await especie.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+
+            if(!updateEspecie){
+                return res.status(404).send('Espécie não encontrado');
+            }
+            else{
+                res.send(updateEspecie);
+            }
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    }
+} )
+
+router.delete('/especies/:id', async (req, res) => {    
+    try {
+        const deleteEspecie = await especie.findByIdAndDelete(req.params.id);
+
+        if(!deleteEspecie){
+            return res.send(404).send('Espécie não encontrado');
+        }
+        else{
+            res.send(deleteEspecie);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+} )
 
 module.exports = router;
