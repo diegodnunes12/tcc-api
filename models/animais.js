@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 const validator = require('validator');
 
-const Schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
-const animalSchema = new Schema ({
+var animalSchema = new Schema ({
     nome: {
         type: String,
         required:true,
@@ -48,17 +48,17 @@ const animalSchema = new Schema ({
         type: Boolean,
         required:true
     },
-    ong_id:{
+    ong:{
         type: Schema.Types.ObjectId,
         ref: "ong",
         required:true
     },
-    especie_id:{
+    especie:{
         type: Schema.Types.ObjectId,
         ref: "especie",
         required:true
     },
-    porte_id:{
+    porte:{
         type: Schema.Types.ObjectId,
         ref: "porte",
         required:true
@@ -74,6 +74,6 @@ const animalSchema = new Schema ({
     }
 });
 
-const animal = mongoose.model("animal", animalSchema);
+var animal = mongoose.model("animal", animalSchema);
 
 module.exports = animal;

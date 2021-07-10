@@ -15,7 +15,7 @@ router.post('/animais', async (req, res) => {
 
 router.get('/animais', async (req, res) => {
     try {
-        const getAnimais = await animal.find({}).populate("portes");
+        const getAnimais = await animal.find({}).populate("especie").populate("porte").populate("ong");
         res.status(200).send(getAnimais);
     } catch (error) {
         res.status(500).send(error);
@@ -25,7 +25,7 @@ router.get('/animais', async (req, res) => {
 router.get('/animais/:id', async (req, res) => {
     const _id = req.params.id;
     try {
-        const getAnimal = await animal.findById(_id);
+        const getAnimal = await animal.findById(_id).populate("especie").populate("porte").populate("ong");
         if(!getAnimal){
             res.status(404).send('Animal não encontrado');
         }

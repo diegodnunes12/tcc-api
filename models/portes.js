@@ -1,9 +1,8 @@
-const mongoose = require("mongoose");
-const validator = require('validator');
+var mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const porteSchema = new Schema ({
+var porteSchema = new Schema ({
     nome: {
         type: String,
         required:true,
@@ -13,6 +12,6 @@ const porteSchema = new Schema ({
     }
 });
 
-const porte = mongoose.model("porte", porteSchema);
+var porte = mongoose.model("porte", porteSchema);
 
 module.exports = porte;

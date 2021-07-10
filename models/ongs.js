@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 const validator = require('validator');
 
 const Schema = mongoose.Schema;
 
-const OngSchema = new Schema ({
+var ongSchema = new Schema ({
     nome: {
         type: String,
         required:true,
@@ -58,6 +58,6 @@ const OngSchema = new Schema ({
     },
 });
 
-const ong = mongoose.model("ong", OngSchema);
+var ong = mongoose.model("ong", ongSchema);
 
 module.exports = ong;

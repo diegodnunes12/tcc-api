@@ -1,9 +1,8 @@
-const mongoose = require("mongoose");
-const validator = require('validator');
+var mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const especieSchema = new Schema ({
+var especieSchema = new Schema ({
     nome: {
         type: String,
         required:true,
@@ -13,6 +12,6 @@ const especieSchema = new Schema ({
     }
 });
 
-const especie = mongoose.model("especie", especieSchema);
+var especie = mongoose.model("especie", especieSchema);
 
 module.exports = especie;
