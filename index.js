@@ -29,6 +29,9 @@ app.use(routers.portes);
 app.use(routers.animais);
 app.use(routers.especies);
 app.use(routers.ongs);
+app.use(routers.usuarios);
+app.use(routers.tipoUsuarioOng);
+app.use(routers.usuarioOng);
 
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser:true,
