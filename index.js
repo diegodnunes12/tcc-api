@@ -4,6 +4,9 @@ const winston = require('winston');
 const app = express();
 require('dotenv').config();
 const routers = require('./routes/routers');
+var cors = require('cors');
+
+app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
