@@ -30,6 +30,12 @@ var animalSchema = new Schema ({
         maxlength: 50,
         trim: true
     },
+    idade: {
+        type: String,
+        required:false,
+        maxlength: 20,
+        trim: true
+    },
     historia: {
         type: String,
         required:false,
