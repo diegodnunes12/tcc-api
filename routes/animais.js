@@ -1,9 +1,31 @@
 const express = require('express');
 const animal = require('../models/animais');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Math.random().toString(36).substr(2).toLowerCase() + '-' + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 const router = new express.Router();
 
-router.post('/animais', async (req, res) => {
+router.post('/animais', upload.single('imagem'), async (req, res) => {
+    console.log(req.file)
+    req.body.imagem = req.file.filename;
     const addAnimal = new animal(req.body);
     try {
         await addAnimal.save();

@@ -13,6 +13,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
+app.use('/files', express.static('uploads'));
+
 const logger = winston.createLogger({
     level: 'info',
     transports: [

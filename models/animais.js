@@ -77,6 +77,9 @@ var animalSchema = new Schema ({
                 throw new Error('Informe uma data válida');
             }
         }
+    },
+    imagem: {
+        type: String
     }
 });
 
