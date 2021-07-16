@@ -20,22 +20,22 @@ const s3 = new AWS.S3({
 
 const router = new express.Router();
 
-router.post('/animais', upload, async (req, res) => {    
+router.post('/animais', upload, async (req, res) => {       
     let file = req.file.originalname.split(".");
     const fileType = file[file.length - 1];
+    let imageName = `${uuidv4()}.${fileType}`; 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `imagens/${uuidv4()}.${fileType}`,
+        Key: `imagens/${imageName}`,
         Body: req.file.buffer
     }
     s3.upload(params, (error, data) => {
         if(error) {
             res.status(500).send(error)
-        }
-        
+        }        
     });
 
-    req.body.imagem = req.file.filename;
+    req.body.imagem = imageName;
     const addAnimal = new animal(req.body);
     try {
         await addAnimal.save();
