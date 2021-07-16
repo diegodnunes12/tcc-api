@@ -1,30 +1,40 @@
 const express = require('express');
 const animal = require('../models/animais');
 const multer = require('multer');
+const AWS = require('aws-sdk');
+require('dotenv').config();
+const { v4: uuidv4 } = require('uuid');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, './uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Math.random().toString(36).substr(2).toLowerCase() + '-' + file.originalname);
+const storage = multer.memoryStorage({
+    destination: function(req, file, callback) {
+        callback(null, '')
     }
 });
 
-const fileFilter = (req, file, cb) => {
-    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-};
+const upload = multer({ storage }).single('imagem');
 
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET
+});
 
 const router = new express.Router();
 
-router.post('/animais', upload.single('imagem'), async (req, res) => {
-    console.log(req.file)
+router.post('/animais', upload, async (req, res) => {    
+    let file = req.file.originalname.split(".");
+    const fileType = file[file.length - 1];
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `imagens/${uuidv4()}.${fileType}`,
+        Body: req.file.buffer
+    }
+    s3.upload(params, (error, data) => {
+        if(error) {
+            res.status(500).send(error)
+        }
+        
+    });
+
     req.body.imagem = req.file.filename;
     const addAnimal = new animal(req.body);
     try {
