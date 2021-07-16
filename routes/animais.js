@@ -35,8 +35,8 @@ router.post('/animais', upload, async (req, res) => {
         }        
     });
 
-    req.body.imagem = imageName;
-    const addAnimal = new animal(req.body);
+    let addAnimal = new animal(req.body);
+    addAnimal.imagem = imageName;
     try {
         await addAnimal.save();
         res.status(201).send(addAnimal);
