@@ -27,7 +27,8 @@ router.post('/animais', upload, async (req, res) => {
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: `imagens/${imageName}`,
-        Body: req.file.buffer
+        Body: req.file.buffer,
+        ACL:'public-read'
     }
     s3.upload(params, (error, data) => {
         if(error) {
