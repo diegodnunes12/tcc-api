@@ -70,9 +70,24 @@ router.get('/animais/:id', async (req, res) => {
     }
 } )
 
-router.patch('/animais/:id', async (req, res) => {    
+router.patch('/animais/:id', upload, async (req, res) => {  
+    let file = req.file.originalname.split(".");
+    const fileType = file[file.length - 1];
+    let imageName = `${uuidv4()}.${fileType}`; 
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `imagens/${imageName}`,
+        Body: req.file.buffer,
+        ACL:'public-read'
+    }
+    s3.upload(params, (error, data) => {
+        if(error) {
+            res.status(500).send(error)
+        }        
+    });
+
     const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'pelagem', 'sexo', 'raca', 'idade', 'historia', 'castrado', 'vacinado', 'vermifugado', 'especie', 'porte'];
+    const allowedUpdate = ['nome', 'pelagem', 'sexo', 'raca', 'idade', 'historia', 'castrado', 'vacinado', 'vermifugado', 'especie', 'porte', 'imagem'];
     const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
     if(!isValidationOperation){
@@ -80,7 +95,8 @@ router.patch('/animais/:id', async (req, res) => {
     }
     else{
         try {
-            const updateAnimal = await animal.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+            req.body.imagem = imageName;
+            const updateAnimal = await animal.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});            
 
             if(!updateAnimal){
                 return res.status(404).send('Animal não encontrado');
