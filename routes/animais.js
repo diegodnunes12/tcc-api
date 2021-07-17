@@ -123,6 +123,18 @@ router.patch('/animais/:id', upload, async (req, res) => {
 router.delete('/animais/:id', async (req, res) => {    
     try {
         const deleteAnimal = await animal.findByIdAndDelete(req.params.id);
+        console.log(deleteAnimal);
+        if(deleteAnimal.imagem !== "") {
+            const params = {
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: `imagens/${deleteAnimal.imagem}`,
+            }
+            s3.deleteObject(params, (error, data) => {
+                if(error) {
+                    res.status(500).send(error)
+                }        
+            });
+        };
 
         if(!deleteAnimal){
             return res.send(404).send('Animal não encontrado');
