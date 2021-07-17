@@ -20,21 +20,24 @@ const s3 = new AWS.S3({
 
 const router = new express.Router();
 
-router.post('/animais', upload, async (req, res) => {       
-    let file = req.file.originalname.split(".");
-    const fileType = file[file.length - 1];
-    let imageName = `${uuidv4()}.${fileType}`; 
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `imagens/${imageName}`,
-        Body: req.file.buffer,
-        ACL:'public-read'
-    }
-    s3.upload(params, (error, data) => {
-        if(error) {
-            res.status(500).send(error)
-        }        
-    });
+router.post('/animais', upload, async (req, res) => {  
+    let imageName = "";
+    if(req.file) {
+        let file = req.file.originalname.split(".");
+        const fileType = file[file.length - 1];
+        imageName = `${uuidv4()}.${fileType}`; 
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: `imagens/${imageName}`,
+            Body: req.file.buffer,
+            ACL:'public-read'
+        }
+        s3.upload(params, (error, data) => {
+            if(error) {
+                res.status(500).send(error)
+            }        
+        });
+    } 
 
     let addAnimal = new animal(req.body);
     addAnimal.imagem = imageName;
@@ -70,21 +73,24 @@ router.get('/animais/:id', async (req, res) => {
     }
 } )
 
-router.patch('/animais/:id', upload, async (req, res) => {  
-    let file = req.file.originalname.split(".");
-    const fileType = file[file.length - 1];
-    let imageName = `${uuidv4()}.${fileType}`; 
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `imagens/${imageName}`,
-        Body: req.file.buffer,
-        ACL:'public-read'
+router.patch('/animais/:id', upload, async (req, res) => { 
+    let imageName = "";
+    if(req.file) {
+        let file = req.file.originalname.split(".");
+        const fileType = file[file.length - 1];
+        imageName = `${uuidv4()}.${fileType}`; 
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: `imagens/${imageName}`,
+            Body: req.file.buffer,
+            ACL:'public-read'
+        }
+        s3.upload(params, (error, data) => {
+            if(error) {
+                res.status(500).send(error)
+            }        
+        });
     }
-    s3.upload(params, (error, data) => {
-        if(error) {
-            res.status(500).send(error)
-        }        
-    });
 
     const dataUpdate = Object.keys(req.body);
     const allowedUpdate = ['nome', 'pelagem', 'sexo', 'raca', 'idade', 'historia', 'castrado', 'vacinado', 'vermifugado', 'especie', 'porte', 'imagem'];
@@ -95,7 +101,11 @@ router.patch('/animais/:id', upload, async (req, res) => {
     }
     else{
         try {
-            req.body.imagem = imageName;
+            if(req.file) {
+                req.body.imagem = imageName;
+                console.log(req.body.imagem)
+            }
+            console.log(req.body.imagem)
             const updateAnimal = await animal.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});            
 
             if(!updateAnimal){
