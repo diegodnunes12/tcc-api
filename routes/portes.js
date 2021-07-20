@@ -2,6 +2,29 @@ const express = require('express');
 const porte = require('../models/portes');
 
 const router = new express.Router();
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     portes:
+ *       type: object
+ *       required:
+ *         - nome
+ *       properties:
+ *         nome:
+ *           type: string
+ *           description: descrição do porte
+ *       example:
+ *         _id: 60e9fbd0c71254fd715ba5f1,
+ *         nome: Grande
+ */
+
+ /**
+  * @swagger
+  * tags:
+  *   name: Portes
+  *   description: Porte dos animais
+  */
 
 router.post('/portes', async (req, res) => {
     const addPorte = new porte(req.body);
@@ -13,6 +36,24 @@ router.post('/portes', async (req, res) => {
     }
 });
 
+
+
+/**
+ * @swagger
+ * /portes:
+ *   get:
+ *     summary: Retorna todos os portes
+ *     tags: [Portes]
+ *     responses:
+ *       200:
+ *         description: Lista todos os portes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/portes'
+ */
 router.get('/portes', async (req, res) => {
     try {
         const getPortes = await porte.find({});
@@ -22,6 +63,31 @@ router.get('/portes', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /portes/{id}:
+ *   get:
+ *     summary: Recupera um porte pelo id
+ *     tags: [Portes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id do porte
+ *     responses:
+ *       200:
+ *         description: Porte pelo id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/portes'
+ *       404:
+ *         description: Porte não encontrado
+ *       500:
+ *         description: Não foi possível listar o porte
+ */
 router.get('/portes/:id', async (req, res) => {
     const _id = req.params.id;
     try {

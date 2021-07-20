@@ -1,12 +1,32 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const winston = require('winston');
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 const app = express();
 require('dotenv').config();
 const routers = require('./routes/routers');
 var cors = require('cors');
 
 app.use(cors());
+
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+			title: "Adote Já API",
+			version: "1.0.0",
+			description: "A simple Express Library API",
+		},
+        servers: [
+			{
+				url: "https://adotejaapi.herokuapp.com",
+			},
+		],
+    },
+    apis: ["./routes/*.js"],
+};
+const specs = swaggerJsDoc(options);
 
 const PORT = process.env.PORT || 3000;
 
@@ -30,6 +50,7 @@ const logger = winston.createLogger({
     ]
 });
 
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(routers.portes);
 app.use(routers.animais);
 app.use(routers.especies);
