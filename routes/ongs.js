@@ -7,7 +7,7 @@ const router = new express.Router();
  * @swagger
  * components:
  *   schemas:
- *     ongs:
+ *     ongsPost:
  *       type: object
  *       required:
  *         - nome
@@ -50,6 +50,39 @@ const router = new express.Router();
  *         instagram: larfelizoficial
  *         endereco: Rua da Paz, 41, centro - Conceição dos Ouros - MG
  *         data_cadastro: 2021-01-01
+ *     ongsPut:
+ *       type: object
+ *       required:
+ *         - nome
+ *         - telefone
+ *         - email
+ *         - endereco
+ *       properties:
+ *         nome:
+ *           type: string
+ *           description: nome da ong
+ *         telefone:
+ *           type: string
+ *           description: numero de telefone
+ *         email:
+ *           type: string
+ *           description: e-mail
+ *         facebook:
+ *           type: string
+ *           description: nome da ong
+ *         instagram:
+ *           type: string
+ *           description: cnpj da ong
+ *         endereco:
+ *           type: string
+ *           description: numero de telefone
+ *       example:
+ *         nome: Lar Feliz
+ *         telefone: (35) 90000-0000
+ *         email: onglarfeliz@gmail.com
+ *         facebook: larfeliz
+ *         instagram: larfelizoficial
+ *         endereco: Rua da Paz, 41, centro - Conceição dos Ouros - MG
  */
 
 /**
@@ -70,14 +103,14 @@ const router = new express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/ongs'
+ *             $ref: '#/components/schemas/ongsPost'
  *     responses:
  *       200:
  *         description: Ong inserida com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ongs'
+ *               $ref: '#/components/schemas/ongsPost'
  *       500:
  *         description: Não foi possível inserir a ong
  */
@@ -105,7 +138,7 @@ router.post('/ongs', async (req, res) => {
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/ongs'
+ *                 $ref: '#/components/schemas/ongsPost'
  */
 router.get('/ongs', async (req, res) => {
     try {
@@ -135,7 +168,7 @@ router.get('/ongs', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ongs'
+ *               $ref: '#/components/schemas/ongsPost'
  *       404:
  *         description: Ong não encontrada
  *       500:
@@ -174,14 +207,14 @@ router.get('/ongs/:id', async (req, res) => {
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/ongs'
+ *            $ref: '#/components/schemas/ongsPut'
  *    responses:
  *      200:
  *        description: Ong alterada com sucesso
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/ongs'
+ *              $ref: '#/components/schemas/ongsPut'
  *      400:
  *        description: Não foi possivel alterar algum campo especifico
  *      404:

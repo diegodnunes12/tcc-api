@@ -20,6 +20,103 @@ const s3 = new AWS.S3({
 
 const router = new express.Router();
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     animaisPost:
+ *       type: object
+ *       required:
+ *         - nome
+ *         - sexo
+ *         - castrado
+ *         - vacinado
+ *         - vermifugado
+ *         - ong
+ *         - especie
+ *         - porte
+ *         - data_cadastro
+ *       properties:
+ *         nome:
+ *           type: string
+ *         pelagem:
+ *           type: string
+ *           description: Tipo do pelo ou cor do animal
+ *         sexo:
+ *           type: string
+ *         raca:
+ *           type: string
+ *         idade:
+ *           type: string
+ *         historia:
+ *           type: string
+ *           description: História do animal
+ *         castrado:
+ *           type: boolean
+ *           description: Informa se o animal é castrado
+ *         vacinado:
+ *           type: boolean
+ *           description: Informa se o animal é vacinado
+ *         vermifugado:
+ *           type: boolean
+ *           description: Informa se o animal está vermifugado
+ *         ong:
+ *           type: string
+ *           description: Id da ong que pertence o animal
+ *         especie:
+ *           type: string
+ *           description: Id da espécie que pertence o animal
+ *         porte:
+ *           type: string
+ *           description: Id do porte do animal
+ *         data_cadastro:
+ *           type: date
+ *           description: e-mail
+ *       example:
+ *         nome: Totó
+ *         pelagem: Amarela
+ *         sexo: id_sexo
+ *         raca: SRD
+ *         idade: 2 meses
+ *         historia: Cachorro encontrado no mercado municipal
+ *         castrado: false
+ *         vacinado: false
+ *         vermifugado: true
+ *         ong: id_ong
+ *         especie: id_especie
+ *         porte: id_porte
+ *         data_cadastro: 2021-01-01
+ */
+
+/**
+  * @swagger
+  * tags:
+  *   name: Animais
+  *   description: Animais
+  */
+
+/**
+ * @swagger
+ * /animais:
+ *   post:
+ *     summary: Adiciona um novo animal
+ *     tags: [Animais]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/animaisPost'
+ *     responses:
+ *       200:
+ *         description: Animal inserido com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/animaisPost'
+ *       500:
+ *         description: Não foi possível inserir o animal
+ */
 router.post('/animais', upload, async (req, res) => {  
     let imageName = "";
     if(req.file) {
