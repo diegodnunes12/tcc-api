@@ -71,7 +71,6 @@ const router = new express.Router();
  *           description: Id do porte do animal
  *         data_cadastro:
  *           type: date
- *           description: e-mail
  *       example:
  *         nome: Totó
  *         pelagem: Amarela
@@ -86,6 +85,58 @@ const router = new express.Router();
  *         especie: id_especie
  *         porte: id_porte
  *         data_cadastro: 2021-01-01
+ *     animaisPut:
+ *       type: object
+ *       required:
+ *         - nome
+ *         - sexo
+ *         - castrado
+ *         - vacinado
+ *         - vermifugado
+ *         - especie
+ *         - porte
+ *       properties:
+ *         nome:
+ *           type: string
+ *         pelagem:
+ *           type: string
+ *           description: Tipo do pelo ou cor do animal
+ *         sexo:
+ *           type: string
+ *         raca:
+ *           type: string
+ *         idade:
+ *           type: string
+ *         historia:
+ *           type: string
+ *           description: História do animal
+ *         castrado:
+ *           type: boolean
+ *           description: Informa se o animal é castrado
+ *         vacinado:
+ *           type: boolean
+ *           description: Informa se o animal é vacinado
+ *         vermifugado:
+ *           type: boolean
+ *           description: Informa se o animal está vermifugado
+ *         especie:
+ *           type: string
+ *           description: Id da espécie que pertence o animal
+ *         porte:
+ *           type: string
+ *           description: Id do porte do animal
+ *       example:
+ *         nome: Totó
+ *         pelagem: Amarela
+ *         sexo: id_sexo
+ *         raca: SRD
+ *         idade: 2 meses
+ *         historia: Cachorro encontrado no mercado municipal
+ *         castrado: false
+ *         vacinado: false
+ *         vermifugado: true
+ *         especie: id_especie
+ *         porte: id_porte
  */
 
 /**
@@ -146,6 +197,22 @@ router.post('/animais', upload, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /animais:
+ *   get:
+ *     summary: Retorna todos os animais
+ *     tags: [Animais]
+ *     responses:
+ *       200:
+ *         description: Lista todas os animais
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/animaisPost'
+ */
 router.get('/animais', async (req, res) => {
     try {
         const getAnimais = await animal.find({}).populate("especie").populate("porte").populate("ong");
@@ -155,6 +222,31 @@ router.get('/animais', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /animais/{id}:
+ *   get:
+ *     summary: Recupera uma animal pelo id
+ *     tags: [Animais]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id do animal
+ *     responses:
+ *       200:
+ *         description: Ong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/animaisPost'
+ *       404:
+ *         description: Animal não encontrada
+ *       500:
+ *         description: Não foi possível listar o animal
+ */
 router.get('/animais/:id', async (req, res) => {
     const _id = req.params.id;
     try {
@@ -168,8 +260,32 @@ router.get('/animais/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send(error);
     }
-} )
+} );
 
+/**
+ * @swagger
+ * /animais:
+ *   patch:
+ *     summary: Altera um novo animal
+ *     tags: [Animais]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/animaisPut'
+ *     responses:
+ *       200:
+ *         description: Animal alterado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/animaisPut'
+ *       404:
+ *         description: Animal não encontrado
+ *       500:
+ *         description: Não foi possível alterar o animal
+ */
 router.patch('/animais/:id', upload, async (req, res) => { 
     let imageName = "";
     if(req.file) {
@@ -215,8 +331,30 @@ router.patch('/animais/:id', upload, async (req, res) => {
             res.status(500).send(error)
         }
     }
-} )
+} );
 
+/**
+ * @swagger
+ * /animais/{id}:
+ *   delete:
+ *     summary: Remove um animal
+ *     tags: [Animais]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id do animal
+ * 
+ *     responses:
+ *       200:
+ *         description: Animal removido com sucesso
+ *       404:
+ *         description: Animal não encontrado
+ *       500:
+ *         description: Não foi possível deletar o animal
+ */
 router.delete('/animais/:id', async (req, res) => {    
     try {
         const deleteAnimal = await animal.findByIdAndDelete(req.params.id);
