@@ -3,6 +3,54 @@ const contato = require('../models/contatos');
 
 const router = new express.Router();
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     contatos:
+ *       type: object
+ *       required:
+ *         - data_contato
+ *         - animal
+ *       properties:
+ *         data_contato:
+ *           type: date
+ *         animal:
+ *           type: string
+ *           description: id do animal
+ *       example:
+ *         data_contato: 2021-01-01
+ *         animal: id_do_animal
+ */
+
+/**
+  * @swagger
+  * tags:
+  *   name: Contatos
+  */
+
+/**
+ * @swagger
+ * /contatos:
+ *   post:
+ *     summary: Adiciona um novo contato
+ *     tags: [Contatos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/contatos'
+ *     responses:
+ *       200:
+ *         description: Contato realizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/contatos'
+ *       500:
+ *         description: Não foi possível realizar o contato
+ */
 router.post('/contatos', async (req, res) => {
     const addContato = new contato(req.body);
     try {
@@ -13,6 +61,22 @@ router.post('/contatos', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /contatos:
+ *   get:
+ *     summary: Retorna todos os contatos
+ *     tags: [Contatos]
+ *     responses:
+ *       200:
+ *         description: Lista todas os contatos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/contatos'
+ */
 router.get('/contatos', async (req, res) => {
     try {
         const getContatos = await contato.find({});
@@ -22,6 +86,31 @@ router.get('/contatos', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /contatos/{id}:
+ *   get:
+ *     summary: Recupera um contato pelo id
+ *     tags: [Contatos]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id do contato
+ *     responses:
+ *       200:
+ *         description: Contato
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/contatos'
+ *       404:
+ *         description: Contato não encontrada
+ *       500:
+ *         description: Não foi possível listar o contato
+ */
 router.get('/contatos/:id', async (req, res) => {
     const _id = req.params.id;
     try {

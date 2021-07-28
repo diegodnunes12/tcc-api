@@ -32,25 +32,10 @@ var usuarioSchema = new Schema ({
         required:true,
         maxlength: 50
     },
-    data_nascimento: {
-        type: Date,
-        required:true,
-        validator(value){
-            if(!validator.Date(value)){
-                throw new Error('Informe uma data válida');
-            }
-        }
-    },
     telefone: {
         type: String,
         required:true,
         maxlength: 20,
-        trim: true
-    },
-    endereco: {
-        type: String,
-        required:true,
-        maxlength: 100,
         trim: true
     },
     data_cadastro: {
