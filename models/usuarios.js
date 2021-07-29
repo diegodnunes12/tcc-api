@@ -38,6 +38,11 @@ var usuarioSchema = new Schema ({
         maxlength: 20,
         trim: true
     },
+    tipo_usuario: {
+        type: Schema.Types.ObjectId,
+        ref: "tipoUsuario",
+        required:true
+    },
     data_cadastro: {
         type: Date,
         required:true,

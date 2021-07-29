@@ -264,9 +264,9 @@ router.get('/animais/:id', async (req, res) => {
 
 /**
  * @swagger
- * /animais:
+ * /animais/{id}:
  *   patch:
- *     summary: Altera um novo animal
+ *     summary: Altera um animal
  *     tags: [Animais]
  *     requestBody:
  *       required: true

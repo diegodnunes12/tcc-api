@@ -4,7 +4,7 @@ module.exports = {
     especies: require('./especies'),
     ongs: require('./ongs'),
     usuarios: require('./usuarios'),
-    tipoUsuarioOng: require('./tipo-usuario-ong'),
+    tipoUsuario: require('./tipo-usuario'),
     usuarioOng: require('./usuarios-ong'),
     contatos: require('./contatos'),
     mensagens: require('./mensagens'),

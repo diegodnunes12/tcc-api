@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-var tipoUsuarioOngSchema = new Schema ({
+var tipoUsuarioSchema = new Schema ({
     nome: {
         type: String,
         required:true,
@@ -12,6 +12,6 @@ var tipoUsuarioOngSchema = new Schema ({
     }
 });
 
-var tipoUsuarioOng = mongoose.model("tipoUsuarioOng", tipoUsuarioOngSchema);
+var tipoUsuario = mongoose.model("tipoUsuario", tipoUsuarioSchema);
 
-module.exports = tipoUsuarioOng;
+module.exports = tipoUsuario;

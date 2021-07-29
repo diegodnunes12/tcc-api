@@ -3,6 +3,55 @@ const usuarioOng = require('../models/usuarios-ong');
 
 const router = new express.Router();
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     usuariosOng:
+ *       type: object
+ *       required:
+ *         - usuario
+ *         - ong
+ *       properties:
+ *         usuario:
+ *           type: string
+ *           description: id do usuário
+ *         ong:
+ *           type: string
+ *           description: id da ong
+ *       example:
+ *         usuario: id do usuario
+ *         ong: id da ong
+ */
+
+/**
+  * @swagger
+  * tags:
+  *   name: Usuários-Ong
+  */
+
+/**
+ * @swagger
+ * /usuarios:
+ *   post:
+ *     summary: Adiciona um novo usuário ong
+ *     tags: [Usuários-Ong]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/usuariosOng'
+ *     responses:
+ *       200:
+ *         description: Usuário inserido com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/usuariosOng'
+ *       500:
+ *         description: Não foi possível inserir o usuário
+ */
 router.post('/usuarios-ong', async (req, res) => {
     const addUsuario = new usuarioOng(req.body);
     try {
@@ -21,45 +70,6 @@ router.get('/usuarios-ong', async (req, res) => {
         res.status(500).send(error);
     }
 });
-
-router.get('/usuarios-ong/:id', async (req, res) => {
-    const _id = req.params.id;
-    try {
-        const getUsuario = await usuarioOng.findById(_id);
-        if(!getUsuario){
-            res.status(404).send('Usuário não encontrada');
-        }
-        else{
-            res.status(200).send(getUsuario);
-        }
-    } catch (error) {
-        res.status(500).send(error);
-    }
-} )
-
-router.patch('/usuarios-ong/:id', async (req, res) => {    
-    const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'senha'];
-    const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
-
-    if(!isValidationOperation){
-        return res.status(400).send({error: 'Não foi possivel alterar algum campo especifico'});
-    }
-    else{
-        try {
-            const updateUsuario = await usuarioOng.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
-
-            if(!updateUsuario){
-                return res.status(404).send('Usuário não encontrado');
-            }
-            else{
-                res.send(updateUsuario);
-            }
-        } catch (error) {
-            res.status(500).send(error)
-        }
-    }
-} )
 
 router.delete('/usuarios-ong/:id', async (req, res) => {    
     try {
