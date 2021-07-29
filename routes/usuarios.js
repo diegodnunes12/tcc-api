@@ -75,12 +75,25 @@ const router = new express.Router();
  *         senha: jX990JkResIgsaA
  *         telefone: (35) 9 1234-5678
  *         tipo_usuario: id do tipo de usuário
+ *     usuariosLogin:
+ *       type: object
+ *       required:
+ *         - email
+ *         - senha
+ *       properties:
+ *         email:
+ *           type: string
+ *         senha:
+ *           type: string
+ *       example:
+ *         email: joao@gmail.com
+ *         senha: jX990JkResIgsaA
  */
 
 /**
   * @swagger
   * tags:
-  *   name: Usuários
+  *   name: Usuarios
   */
 
 /**
@@ -141,7 +154,7 @@ router.post('/usuarios', async (req, res) => {
 router.get('/usuarios/ong/:ongId', async (req, res) => {
     try {
         const _ongId = req.params.ongId;
-        const getUsuarios = await mensagem.find({ ong: _ongId });
+        const getUsuarios = await usuario.find({ ong: _ongId });
         res.status(200).send(getUsuarios);
     } catch (error) {
         res.status(500).send(error);
@@ -187,6 +200,82 @@ router.get('/usuarios/:id', async (req, res) => {
         res.status(500).send(error);
     }
 } );
+
+/**
+ * @swagger
+ * /usuarios/sistema:
+ *   post:
+ *     summary: Recupera um usuário pelo email e senha
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/usuariosLogin'
+ *     responses:
+ *       200:
+ *         description: usuário logado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/usuariosLogin'
+ *       500:
+ *         description: Não foi possível logar
+ */
+ router.post('/usuarios/sistema', async (req, res) => {
+    try {
+        const getUsuario = await usuario.findOne({ email: req.body.email, senha: req.body.senha });
+        if(!getUsuario) {            
+            res.status(404).send("Usuário não encontrado");
+        }else {
+            res.status(200).send(getUsuario);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
+ * /usuarios/sistema-admin:
+ *   post:
+ *     summary: Recupera um usuário pelo email e senha e verifica se ele possui uma ong_id
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/usuariosLogin'
+ *     responses:
+ *       200:
+ *         description: usuário logado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/usuariosLogin'
+ *       500:
+ *         description: Não foi possível logar
+ */
+ router.post('/usuarios/sistema-admin', async (req, res) => {
+    try {
+        const getUsuario = await usuario.findOne({ email: req.body.email, senha: req.body.senha });
+        console.log(getUsuario)
+        if(!getUsuario) {            
+            res.status(404).send("Usuário não encontrado");
+        }else {
+            if(getUsuario.ong !== null) {
+                res.status(200).send(getUsuario);
+            }else {
+                res.status(404).send("Usuário não encontrado");
+            }
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+  
 
 /**
  * @swagger

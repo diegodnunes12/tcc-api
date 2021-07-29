@@ -20,9 +20,14 @@ const options = {
 		},
         servers: [
 			{
-				url: "https://adotejaapi.herokuapp.com",
+				url: "http://localhost:3000/",
 			},
 		],
+        /* servers: [
+			{
+				url: "https://adotejaapi.herokuapp.com",
+			},
+		], */
     },
     apis: ["./routes/*.js"],
 };
