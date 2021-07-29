@@ -57,7 +57,6 @@ app.use(routers.especies);
 app.use(routers.ongs);
 app.use(routers.usuarios);
 app.use(routers.tipoUsuario);
-app.use(routers.usuarioOng);
 app.use(routers.contatos);
 app.use(routers.mensagens);
 

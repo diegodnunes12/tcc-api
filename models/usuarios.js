@@ -43,6 +43,11 @@ var usuarioSchema = new Schema ({
         ref: "tipoUsuario",
         required:true
     },
+    ong: {
+        type: Schema.Types.ObjectId,
+        ref: "ong",
+        required:false
+    },
     data_cadastro: {
         type: Date,
         required:true,

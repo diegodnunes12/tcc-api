@@ -31,6 +31,9 @@ const router = new express.Router();
  *         tipo_usuario:
  *           type: string
  *           description: id do tipo de usuário
+ *         ong:
+ *           type: string
+ *           description: Caso o usuário for usuário de uma ong deve inserir o id da ong
  *         data_cadastro:
  *           type: date
  *       example:
@@ -40,6 +43,7 @@ const router = new express.Router();
  *         senha: jX990JkResIgsaA
  *         telefone: (35) 9 1234-5678
  *         tipo_usuario: id do tipo de usuário
+ *         ong: id da ong
  *         data_cadastro: 2021-01-01
  *     usuariosPut:
  *       type: object
@@ -113,13 +117,20 @@ router.post('/usuarios', async (req, res) => {
 
 /**
  * @swagger
- * /usuarios:
+ * /usuarios/ong/{ongId}:
  *   get:
- *     summary: Retorna todos os usuarios
+ *     summary: Retorna todos os usuarios de uma ong
  *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: ongId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da ong
  *     responses:
  *       200:
- *         description: Lista todas os usuários
+ *         description: Lista todas os usuários de uma ong
  *         content:
  *           application/json:
  *             schema:
@@ -127,9 +138,10 @@ router.post('/usuarios', async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/usuariosPost'
  */
-router.get('/usuarios', async (req, res) => {
+router.get('/usuarios/ong/:ongId', async (req, res) => {
     try {
-        const getUsuarios = await usuario.find({});
+        const _ongId = req.params.ongId;
+        const getUsuarios = await mensagem.find({ ong: _ongId });
         res.status(200).send(getUsuarios);
     } catch (error) {
         res.status(500).send(error);
@@ -202,7 +214,7 @@ router.get('/usuarios/:id', async (req, res) => {
  */
 router.patch('/usuarios/:id', async (req, res) => {    
     const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'senha', 'data_nascimento', 'telefone', 'endereco'];
+    const allowedUpdate = ['nome', 'senha', 'telefone', 'tipo_usuario'];
     const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
     if(!isValidationOperation){
