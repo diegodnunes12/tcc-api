@@ -19,8 +19,9 @@ var contatoSchema = new Schema ({
         ref: "animal",
         required:true
     },
-    mensagens: {
-        type: Schema.Types.Array,
+    usuario: {
+        type: Schema.Types.ObjectId,
+        ref: "usuario",
         required:true
     }
 });
