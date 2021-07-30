@@ -126,6 +126,46 @@ router.post('/ongs', async (req, res) => {
 
 /**
  * @swagger
+ * /ongs/nome:
+ *   get:
+ *     summary: Recupera uma ong pelo nome
+ *     tags: [Ongs]
+ *     parameters:
+ *       - in: query
+ *         name: descricao
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da ong
+ *     responses:
+ *       200:
+ *         description: Ong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ongsPost'
+ *       404:
+ *         description: Ong não encontrada
+ *       500:
+ *         description: Não foi possível listar a ong
+ */
+ router.get('/ongs/nome', async (req, res) => {
+    const nome = req.query.descricao;
+    try {
+        const getOng = await ong.find({ "nome": { $regex: '.*' + nome + '.*' } });
+        if(!getOng){
+            res.status(404).send('Ong não encontrada');
+        }
+        else{
+            res.status(200).send(getOng);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+} );
+
+/**
+ * @swagger
  * /ongs:
  *   get:
  *     summary: Retorna todos as ongs
@@ -187,7 +227,7 @@ router.get('/ongs/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send(error);
     }
-} )
+} );
 
 /**
  * @swagger

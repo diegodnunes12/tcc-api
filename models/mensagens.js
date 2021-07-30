@@ -21,12 +21,7 @@ var mensagemSchema = new Schema ({
     usuario: {
         type: Schema.Types.ObjectId,
         ref: "usuario",
-        required:false
-    },
-    usuarioOng: {
-        type: Schema.Types.ObjectId,
-        ref: "usuarioOng",
-        required:false
+        required:true
     },
     contato: {
         type: Schema.Types.ObjectId,
