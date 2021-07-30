@@ -61,22 +61,6 @@ router.post('/contatos', async (req, res) => {
     }
 });
 
-/**
- * @swagger
- * /contatos:
- *   get:
- *     summary: Retorna todos os contatos
- *     tags: [Contatos]
- *     responses:
- *       200:
- *         description: Lista todas os contatos
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/contatos'
- */
 router.get('/contatos', async (req, res) => {
     try {
         const getContatos = await contato.find({});

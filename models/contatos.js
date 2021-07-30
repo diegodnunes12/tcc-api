@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 const validator = require('validator');
+const { string } = require("yup");
 
 const Schema = mongoose.Schema;
 
@@ -18,6 +19,10 @@ var contatoSchema = new Schema ({
         ref: "animal",
         required:true
     },
+    mensagens: {
+        type: Schema.Types.Array,
+        required:true
+    }
 });
 
 var contato = mongoose.model("contato", contatoSchema);
