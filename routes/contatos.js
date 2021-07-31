@@ -12,15 +12,25 @@ const router = new express.Router();
  *       required:
  *         - data_contato
  *         - animal
+ *         - usuario
+ *         - ong
  *       properties:
  *         data_contato:
  *           type: date
  *         animal:
  *           type: string
  *           description: id do animal
+ *         usuario:
+ *           type: string
+ *           description: id do ususario que criou o contato
+ *         ong:
+ *           type: string
+ *           description: id da ong que o animal pertence
  *       example:
  *         data_contato: 2021-01-01
  *         animal: id_do_animal
+ *         usuario: id_do_usuario
+ *         ong: id_da_ong
  */
 
 /**
@@ -109,6 +119,72 @@ router.get('/contatos/:id', async (req, res) => {
         res.status(500).send(error);
     }
 } );
+
+/**
+ * @swagger
+ * /contatos/ong/{ongId}:
+ *   get:
+ *     summary: Retorna todos os contatos de uma ong
+ *     tags: [Contatos]
+ *     parameters:
+ *       - in: path
+ *         name: ongId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da ong
+ *     responses:
+ *       200:
+ *         description: Lista todas os contatos de uma ong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/contatos'
+ */
+ router.get('/contatos/ong/:ongId', async (req, res) => {
+    try {
+        const _ongId = req.params.ongId;
+        const getContatos = await contato.find({ ong: _ongId });
+        res.status(200).send(getContatos);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
+ * /contatos/usuario/{usuarioId}:
+ *   get:
+ *     summary: Retorna todos os contatos de um usuario
+ *     tags: [Contatos]
+ *     parameters:
+ *       - in: path
+ *         name: usuarioId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id do usuário
+ *     responses:
+ *       200:
+ *         description: Lista todas os contatos de um usuário
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/contatos'
+ */
+ router.get('/contatos/usuario/:usuarioId', async (req, res) => {
+    try {
+        const _usuarioId = req.params.usuarioId;
+        const getContatos = await contato.find({ usuario: _usuarioId });
+        res.status(200).send(getContatos);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
 
 router.delete('/contatos/:id', async (req, res) => {    
     try {

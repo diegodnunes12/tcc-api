@@ -74,7 +74,7 @@ const router = new express.Router();
  *       example:
  *         nome: Totó
  *         pelagem: Amarela
- *         sexo: id_sexo
+ *         sexo: Macho
  *         raca: SRD
  *         idade: 2 meses
  *         historia: Cachorro encontrado no mercado municipal
@@ -128,7 +128,7 @@ const router = new express.Router();
  *       example:
  *         nome: Totó
  *         pelagem: Amarela
- *         sexo: id_sexo
+ *         sexo: Macho
  *         raca: SRD
  *         idade: 2 meses
  *         historia: Cachorro encontrado no mercado municipal
@@ -224,6 +224,89 @@ router.get('/animais', async (req, res) => {
 
 /**
  * @swagger
+ * /animais/ong/{ongId}:
+ *   get:
+ *     summary: Retorna todos os animais de uma ong
+ *     tags: [Animais]
+ *     parameters:
+ *       - in: path
+ *         name: ongId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da ong
+ *     responses:
+ *       200:
+ *         description: Lista todas os animais de uma ong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/animaisPost'
+ */
+ router.get('/animais/ong/:ongId', async (req, res) => {
+    try {
+        const _ongId = req.params.ongId;
+        const getAnimais = await animal.find({ ong: _ongId });
+        res.status(200).send(getAnimais);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
+ * /animais/filtro:
+ *   get:
+ *     summary: Retorna todos os animais de um determinado filtro
+ *     tags: [Animais]
+ *     parameters:
+ *       - in: query
+ *         name: ong
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: id da ong
+ *       - in: query
+ *         name: especie
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: id da especie do animal
+ *       - in: query
+ *         name: porte
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: id do porte do animal
+ *       - in: query
+ *         name: sexo
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: id do sexo do animal
+ *     responses:
+ *       200:
+ *         description: Lista todas os animais pela busca
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/animaisPost'
+ */
+ router.get('/animais/filtro', async (req, res) => {
+    try {
+        let getAnimais = await animal.find(req.query);
+        res.status(200).send(getAnimais);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
  * /animais/{id}:
  *   get:
  *     summary: Recupera uma animal pelo id
@@ -268,6 +351,13 @@ router.get('/animais/:id', async (req, res) => {
  *   patch:
  *     summary: Altera um animal
  *     tags: [Animais]
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: id do animal
  *     requestBody:
  *       required: true
  *       content:
@@ -316,9 +406,7 @@ router.patch('/animais/:id', upload, async (req, res) => {
         try {
             if(req.file) {
                 req.body.imagem = imageName;
-                console.log(req.body.imagem)
             }
-            console.log(req.body.imagem)
             const updateAnimal = await animal.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});            
 
             if(!updateAnimal){
@@ -358,7 +446,6 @@ router.patch('/animais/:id', upload, async (req, res) => {
 router.delete('/animais/:id', async (req, res) => {    
     try {
         const deleteAnimal = await animal.findByIdAndDelete(req.params.id);
-        console.log(deleteAnimal);
         if(deleteAnimal.imagem !== "") {
             const params = {
                 Bucket: process.env.AWS_BUCKET_NAME,

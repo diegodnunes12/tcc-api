@@ -18,16 +18,16 @@ const options = {
 			version: "1.0.0",
 			description: "A simple Express Library API",
 		},
-        servers: [
+        /* servers: [
 			{
 				url: "http://localhost:3000/",
 			},
-		],
-        /* servers: [
+		], */
+        servers: [
 			{
 				url: "https://adotejaapi.herokuapp.com",
 			},
-		], */
+		],
     },
     apis: ["./routes/*.js"],
 };

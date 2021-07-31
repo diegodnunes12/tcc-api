@@ -23,6 +23,11 @@ var contatoSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: "usuario",
         required:true
+    },
+    ong: {
+        type: Schema.Types.ObjectId,
+        ref: "ong",
+        required:true
     }
 });
 

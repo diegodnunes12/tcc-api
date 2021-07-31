@@ -122,7 +122,7 @@ router.get('/mensagens/:id', async (req, res) => {
 router.get('/mensagens/contato/:contatoId', async (req, res) => {    
     try {
         const _contatoId = req.params.contatoId;
-        const getMensagens = await mensagem.find({ contato: _contatoId }).populate("contatos");;
+        const getMensagens = await mensagem.find({ contato: _contatoId });
         res.status(200).send(getMensagens);
     } catch (error) {
         res.status(500).send(error);
