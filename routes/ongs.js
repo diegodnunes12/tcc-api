@@ -14,7 +14,8 @@ const router = new express.Router();
  *         - cnpj
  *         - telefone
  *         - email
- *         - endereco
+ *         - cidade
+ *         - estado
  *         - data_cadastro
  *       properties:
  *         nome:
@@ -35,9 +36,12 @@ const router = new express.Router();
  *         instagram:
  *           type: string
  *           description: cnpj da ong
- *         endereco:
+ *         cidade:
  *           type: string
- *           description: numero de telefone
+ *           description: Cidade onde está a ong
+ *         estado:
+ *           type: string
+ *           description: Estado onde está a ong
  *         data_cadastro:
  *           type: Date
  *           description: e-mail
@@ -48,7 +52,8 @@ const router = new express.Router();
  *         email: onglarfeliz@gmail.com
  *         facebook: larfeliz
  *         instagram: larfelizoficial
- *         endereco: Rua da Paz, 41, centro - Conceição dos Ouros - MG
+ *         cidade: Conceição dos Ouros
+ *         eidade: MG
  *         data_cadastro: 2021-01-01
  *     ongsPut:
  *       type: object
@@ -56,7 +61,8 @@ const router = new express.Router();
  *         - nome
  *         - telefone
  *         - email
- *         - endereco
+ *         - cidade
+ *         - estado
  *       properties:
  *         nome:
  *           type: string
@@ -73,16 +79,20 @@ const router = new express.Router();
  *         instagram:
  *           type: string
  *           description: cnpj da ong
- *         endereco:
+ *         cidade:
  *           type: string
- *           description: numero de telefone
+ *           description: cidade onde está a ong
+ *         estado:
+ *           type: string
+ *           description: estado onde está a ong
  *       example:
  *         nome: Lar Feliz
  *         telefone: (35) 90000-0000
  *         email: onglarfeliz@gmail.com
  *         facebook: larfeliz
  *         instagram: larfelizoficial
- *         endereco: Rua da Paz, 41, centro - Conceição dos Ouros - MG
+ *         cidade: Conceição dos Ouros
+ *         estado: MG
  */
 
 /**
@@ -264,7 +274,7 @@ router.get('/ongs/:id', async (req, res) => {
  */
 router.patch('/ongs/:id', async (req, res) => {    
     const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'telefone', 'email', 'facebook', 'instagram', 'endereco'];
+    const allowedUpdate = ['nome', 'telefone', 'email', 'facebook', 'instagram', 'cidade', 'estado'];
     const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
     if(!isValidationOperation){

@@ -41,10 +41,16 @@ var ongSchema = new Schema ({
         maxlength: 50,
         trim: true
     },
-    endereco: {
+    cidade: {
         type: String,
         required:true,
         maxlength: 100,
+        trim: true
+    },
+    estado: {
+        type: String,
+        required:true,
+        maxlength: 20,
         trim: true
     },
     data_cadastro: {
