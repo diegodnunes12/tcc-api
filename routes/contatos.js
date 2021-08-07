@@ -179,7 +179,7 @@ router.get('/contatos/:id', async (req, res) => {
  router.get('/contatos/usuario/:usuarioId', async (req, res) => {
     try {
         const _usuarioId = req.params.usuarioId;
-        const getContatos = await contato.find({ usuario: _usuarioId });
+        const getContatos = await contato.find({ usuario: _usuarioId }).populate("animal").populate("ong");
         res.status(200).send(getContatos);
     } catch (error) {
         res.status(500).send(error);
