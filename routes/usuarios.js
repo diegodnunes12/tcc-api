@@ -260,8 +260,7 @@ router.get('/usuarios/:id', async (req, res) => {
  */
  router.post('/usuarios/sistema-admin', async (req, res) => {
     try {
-        const getUsuario = await usuario.findOne({ email: req.body.email, senha: req.body.senha });
-        console.log(getUsuario)
+        const getUsuario = await usuario.findOne({ email: req.body.email, senha: req.body.senha }).populate("ong");
         if(!getUsuario) {            
             res.status(404).send("Usuário não encontrado");
         }else {
