@@ -108,7 +108,7 @@ router.get('/contatos', async (req, res) => {
 router.get('/contatos/:id', async (req, res) => {
     const _id = req.params.id;
     try {
-        const getContato = await contato.findById(_id);
+        const getContato = await contato.findById(_id).populate("animal").populate("ong");
         if(!getContato){
             res.status(404).send('Contato não encontrada');
         }
@@ -146,7 +146,7 @@ router.get('/contatos/:id', async (req, res) => {
  router.get('/contatos/ong/:ongId', async (req, res) => {
     try {
         const _ongId = req.params.ongId;
-        const getContatos = await contato.find({ ong: _ongId });
+        const getContatos = await contato.find({ ong: _ongId }).populate("animal").populate("ong");
         res.status(200).send(getContatos);
     } catch (error) {
         res.status(500).send(error);
