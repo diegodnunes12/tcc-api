@@ -1,6 +1,20 @@
 const express = require('express');
 const porte = require('../models/portes');
 
+const jwt = require('jsonwebtoken');
+const SECRET = 'adoteja';
+
+function verifyJwt(req, res, next) {
+    const token = req.headers['x-access-token'];
+    jwt.verify(token, SECRET, (err, decoded) => {
+        if(err) return res.status(401).end();
+        req.usuario = decoded.usuario;
+        req.ong = decoded.ong;
+
+        next();
+    });
+}
+
 const router = new express.Router();
 /**
  * @swagger
@@ -54,8 +68,9 @@ router.post('/portes', async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/portes'
  */
-router.get('/portes', async (req, res) => {
+router.get('/portes', verifyJwt, async (req, res) => {
     try {
+        console.log(req.ong)
         const getPortes = await porte.find({});
         res.status(200).send(getPortes);
     } catch (error) {

@@ -1,6 +1,9 @@
 const express = require('express');
 const usuario = require('../models/usuarios');
 
+const jwt = require('jsonwebtoken');
+const SECRET = 'adoteja';
+
 const router = new express.Router();
 
 /**
@@ -265,7 +268,8 @@ router.get('/usuarios/:id', async (req, res) => {
             res.status(404).send("Usuário não encontrado");
         }else {
             if(getUsuario.ong !== null) {
-                res.status(200).send(getUsuario);
+                const token = jwt.sign({usuario: getUsuario.nome, ong: getUsuario.ong._id}, SECRET, { expiresIn: 9000 });
+                res.status(200).send({auth: true, token});
             }else {
                 res.status(404).send("Usuário não encontrado");
             }
