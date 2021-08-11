@@ -18,6 +18,20 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET
 });
 
+const jwt = require('jsonwebtoken');
+const SECRET = 'adoteja';
+
+function verifyJwt(req, res, next) {
+    const token = req.headers['x-access-token'];
+    jwt.verify(token, SECRET, (err, decoded) => {
+        if(err) return res.status(401).end();
+        req.usuario = decoded.usuario;
+        req.ong = decoded.ong;
+
+        next();
+    });
+}
+
 const router = new express.Router();
 
 /**
@@ -213,9 +227,10 @@ router.post('/animais', upload, async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/animaisPost'
  */
-router.get('/animais', async (req, res) => {
+router.get('/animais', verifyJwt, async (req, res) => {
     try {
-        const getAnimais = await animal.find({}).populate("especie").populate("porte").populate("ong");
+        const ong = req.ong;
+        const getAnimais = await animal.find({ ong: ong }).populate("especie").populate("porte").populate("ong");
         res.status(200).send(getAnimais);
     } catch (error) {
         res.status(500).send(error);
