@@ -20,9 +20,14 @@ var contatoSchema = new Schema ({
         required:true
     },
     usuario: {
-        type: Schema.Types.ObjectId,
-        ref: "usuario",
-        required:true
+        _id: {
+            type: Schema.Types.String,
+            required:true
+        },
+        nome: {
+            type: Schema.Types.String,
+            required:true
+        }
     },
     ong: {
         type: Schema.Types.ObjectId,

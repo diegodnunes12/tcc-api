@@ -13,7 +13,7 @@ var usuarioSchema = new Schema ({
     },
     cpf: {
         type: String,
-        required:true,
+        required:false,
         maxlength: 15,
         trim: true,
         index: true,
@@ -34,7 +34,7 @@ var usuarioSchema = new Schema ({
     },
     telefone: {
         type: String,
-        required:true,
+        required:false,
         maxlength: 20,
         trim: true
     },
