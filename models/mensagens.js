@@ -19,15 +19,13 @@ var mensagemSchema = new Schema ({
         }
     },
     usuario: {
-        usuario: {
-            _id: {
-                type: Schema.Types.String,
-                required:true
-            },
-            nome: {
-                type: Schema.Types.String,
-                required:true
-            }
+        _id: {
+            type: Schema.Types.String,
+            required:true
+        },
+        nome: {
+            type: Schema.Types.String,
+            required:true
         }
     },
     contato: {
