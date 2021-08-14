@@ -3,7 +3,7 @@ const validator = require('validator');
 
 const Schema = mongoose.Schema;
 
-var usuarioSchema = new Schema ({
+var usuarioOngSchema = new Schema ({
     nome: {
         type: String,
         required:true,
@@ -59,6 +59,6 @@ var usuarioSchema = new Schema ({
     },
 });
 
-var usuario = mongoose.model("usuario", usuarioSchema);
+var usuarioOng = mongoose.model("usuarioOng", usuarioOngSchema);
 
-module.exports = usuario;
+module.exports = usuarioOng;
