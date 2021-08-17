@@ -139,6 +139,39 @@ const router = new express.Router();
 
 /**
  * @swagger
+ * /usuarios-ong/ong/{ongId}:
+ *   get:
+ *     summary: Retorna todos os usuários de uma ong
+ *     tags: [UsuariosOng]
+ *     parameters:
+ *       - in: path
+ *         name: ongId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da ong
+ *     responses:
+ *       200:
+ *         description: Lista todas os usuários de uma ong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/usuariosOng'
+ */
+ router.get('/usuarios-ong/ong/:ongId', async (req, res) => {
+    try {
+        const _ongId = req.params.ongId;
+        const getUsuarios = await usuarioOng.find({ ong: _ongId }, {senha: 0}).populate("tipo_usuario");
+        res.status(200).send(getUsuarios);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
  * /usuarios-ong/{id}:
  *   patch:
  *     summary: Altera um usuário
