@@ -196,7 +196,7 @@ const router = new express.Router();
  router.get('/usuarios-ong/:id', async (req, res) => {
     try {
         const _id = req.params.id;
-        const getUsuario = await usuarioOng.find({ _id: _id }, {senha: 0}).populate("tipo_usuario");
+        const getUsuario = await usuarioOng.findById(_id).populate("tipo_usuario");
         res.status(200).send(getUsuario);
     } catch (error) {
         res.status(500).send(error);
