@@ -173,6 +173,39 @@ const router = new express.Router();
 /**
  * @swagger
  * /usuarios-ong/{id}:
+ *   get:
+ *     summary: Retorna um usuário pelo id
+ *     tags: [UsuariosOng]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id do usuario
+ *     responses:
+ *       200:
+ *         description: retorna um usuário pelo id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/usuariosOng'
+ */
+ router.get('/usuarios-ong/:id', async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const getUsuario = await usuarioOng.find({ _id: _id }, {senha: 0}).populate("tipo_usuario");
+        res.status(200).send(getUsuario);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
+ * /usuarios-ong/{id}:
  *   patch:
  *     summary: Altera um usuário
  *     tags: [UsuariosOng]
