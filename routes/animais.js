@@ -238,32 +238,6 @@ router.get('/animais', async (req, res) => {
 
 /**
  * @swagger
- * /animais:
- *   get:
- *     summary: Retorna todos os animais de uma ong
- *     tags: [Animais]
- *     responses:
- *       200:
- *         description: Lista todas os animais de uma ong
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/animaisPost'
- */
- router.get('/animais/ong', verifyJwt, async (req, res) => {
-    try {
-        const ong = req.ong;
-        const getAnimais = await animal.find({ ong: ong }).populate("especie").populate("porte").populate("ong");
-        res.status(200).send(getAnimais);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
-
-/**
- * @swagger
  * /animais/ong/{ongId}:
  *   get:
  *     summary: Retorna todos os animais de uma ong
@@ -288,7 +262,7 @@ router.get('/animais', async (req, res) => {
  router.get('/animais/ong/:ongId', async (req, res) => {
     try {
         const _ongId = req.params.ongId;
-        const getAnimais = await animal.find({ ong: _ongId });
+        const getAnimais = await animal.find({ ong: _ongId }).populate("especie").populate("porte").populate("ong");
         res.status(200).send(getAnimais);
     } catch (error) {
         res.status(500).send(error);
