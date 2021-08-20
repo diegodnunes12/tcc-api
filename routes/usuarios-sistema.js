@@ -127,6 +127,38 @@ router.post('/usuarios-sistema', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /usuarios-sistema/{id}:
+ *   get:
+ *     summary: Retorna um usuário pelo id
+ *     tags: [UsuariosSistema]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id do usuario
+ *     responses:
+ *       200:
+ *         description: retorna um usuário pelo id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/usuariosSistema'
+ */
+ router.get('/usuarios-sistema/:id', async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const getUsuario = await usuarioSistema.findById(_id);
+        res.status(200).send(getUsuario);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
 
 /**
  * @swagger
