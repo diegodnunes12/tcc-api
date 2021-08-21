@@ -21,8 +21,6 @@ const router = new express.Router();
  *       properties:
  *         nome:
  *           type: string
- *         cpf:
- *           type: string
  *         email:
  *           type: string
  *         senha:
@@ -33,7 +31,6 @@ const router = new express.Router();
  *           type: date
  *       example:
  *         nome: João
- *         cpf: 000.000.000-00
  *         email: joao@gmail.com
  *         senha: jX990JkResIgsaA
  *         telefone: (35) 9 1234-5678
@@ -223,7 +220,7 @@ router.post('/usuarios-sistema', async (req, res) => {
  */
  router.patch('/usuarios-sistema/:id', async (req, res) => {    
     const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'senha', 'telefone', 'cpf'];
+    const allowedUpdate = ['nome', 'senha', 'telefone'];
     const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
     if(!isValidationOperation){

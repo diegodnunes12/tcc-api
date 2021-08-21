@@ -11,14 +11,6 @@ var usuarioSistemaSchema = new Schema ({
         maxlength: 50,
         trim: true
     },
-    cpf: {
-        type: String,
-        required:false,
-        maxlength: 15,
-        trim: true,
-        index: true,
-        unique: true
-    },
     email: {
         type: String,
         required:true,
