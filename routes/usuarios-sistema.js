@@ -220,7 +220,7 @@ router.post('/usuarios-sistema', async (req, res) => {
  */
  router.patch('/usuarios-sistema/:id', async (req, res) => {    
     const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'senha', 'telefone'];
+    const allowedUpdate = ['nome', 'senha', 'telefone', 'cpf'];
     const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
     if(!isValidationOperation){

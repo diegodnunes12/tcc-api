@@ -253,6 +253,43 @@ const router = new express.Router();
 
 /**
  * @swagger
+ * /usuarios-ong/email/{email}:
+ *   get:
+ *     summary: Retorna true ou false caso exista ou não o usuário
+ *     tags: [UsuariosOng]
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: e-mail do usuario
+ *     responses:
+ *       200:
+ *         description: Retorna true ou false caso exista ou não o usuário
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/usuariosOng'
+ */
+ router.get('/usuarios-ong/email/:email', async (req, res) => {
+    try {
+        const email = req.params.email;
+        const getUsuario = await usuarioOng.find({ email: email });
+        if(getUsuario.length > 0) {
+            res.status(200).send(true);
+        }else {
+            res.status(200).send(false);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
  * /usuarios-ong/{id}:
  *   delete:
  *     summary: Remove um usuário

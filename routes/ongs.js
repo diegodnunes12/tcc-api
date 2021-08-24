@@ -201,6 +201,43 @@ router.get('/ongs', async (req, res) => {
 
 /**
  * @swagger
+ * /ongs/cnpj/{cnpj}:
+ *   get:
+ *     summary: Retorna true ou false caso exista ou não a ong
+ *     tags: [Ongs]
+ *     parameters:
+ *       - in: path
+ *         cnpj: cnpj
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: CNPJ da ong
+ *     responses:
+ *       200:
+ *         description: Retorna true ou false caso exista ou não a ong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ongsPost'
+ */
+ router.get('/ongs/cnpj/:cnpj', async (req, res) => {
+    try {
+        const cnpj = req.params.cnpj;
+        const getOng = await ong.find({ cnpj: cnpj });
+        if(getOng.length > 0) {
+            res.status(200).send(true);
+        }else {
+            res.status(200).send(false);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
  * /ongs/{id}:
  *   get:
  *     summary: Recupera uma ong pelo id
