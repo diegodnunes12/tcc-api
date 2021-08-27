@@ -312,7 +312,7 @@ router.get('/animais', async (req, res) => {
  */
  router.get('/animais/filtro', async (req, res) => {
     try {
-        let getAnimais = await animal.find(req.query);
+        let getAnimais = await animal.find(req.query).populate("especie").populate("porte").populate("ong");
         res.status(200).send(getAnimais);
     } catch (error) {
         res.status(500).send(error);
