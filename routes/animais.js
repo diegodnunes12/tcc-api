@@ -1,5 +1,6 @@
 const express = require('express');
 const animal = require('../models/animais');
+const ong = require('../models/ongs');
 const multer = require('multer');
 const AWS = require('aws-sdk');
 require('dotenv').config();
@@ -310,10 +311,51 @@ router.get('/animais', async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/animaisPost'
  */
- router.get('/animais/filtro', async (req, res) => {
+ router.get('/animais/filtro', (req, res) => {
     try {
-        let getAnimais = await animal.find(req.query).populate("especie").populate("porte").populate("ong");
-        res.status(200).send(getAnimais);
+        let buscaAnimal = {};
+        if(req.query.especie) {
+            buscaAnimal.especie = req.query.especie;
+        }
+        if(req.query.porte) {
+            buscaAnimal.porte = req.query.porte;
+        }
+        if(req.query.sexo) {
+            buscaAnimal.sexo = req.query.sexo;
+        }
+        if(req.query.castrado) {
+            buscaAnimal.castrado = req.query.castrado;
+        }
+        if(req.query.vacinado) {
+            buscaAnimal.vacinado = req.query.vacinado;
+        }
+        if(req.query.vermifugado) {
+            buscaAnimal.vermifugado = req.query.vermifugado;
+        }
+
+        animal.find(buscaAnimal).populate("especie").populate("porte").populate("ong")
+            .exec(function (err, docs) {
+                if (err) return handleError(err);
+                if(req.query.estado) {
+                    let animais = [];
+                    if(req.query.cidade) {
+                        docs.forEach(item => {
+                            if(item.ong.cidade === req.query.cidade && item.ong.estado === req.query.estado) {
+                                animais.push(item)
+                            }
+                        });
+                    }else {
+                        docs.forEach(item => {
+                            if(item.ong.estado === req.query.estado) {
+                                animais.push(item)
+                            }
+                        });
+                    }                    
+                    res.status(200).send(animais);
+                } else {
+                    res.status(200).send(docs);
+                }                
+            });      
     } catch (error) {
         res.status(500).send(error);
     }
