@@ -228,10 +228,25 @@ router.post('/animais', upload, async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/animaisPost'
  */
-router.get('/animais', async (req, res) => {
+/* router.get('/animais', async (req, res) => {
     try {
-        const getAnimais = await animal.find({}).populate("especie").populate("porte").populate("ong");
-        res.status(200).send(getAnimais);
+        const {page = 1, limit = 10} = req.query;
+        const getAnimais = await animal.find({}).limit(limit * 1).skip((page - 1) * limit).populate("especie").populate("porte").populate("ong");
+        res.status(200).send({ total: getAnimais.length, getAnimais });
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}); */
+
+router.get('/animais', (req, res) => {
+    try {
+        const {page = 1, limit = 10} = req.query;
+
+        animal.find({}, {}, (err, data) => {
+            animal.countDocuments((err, qtd) => {
+                res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), data })
+            })
+        }).limit(limit * 1).skip((page - 1) * limit).populate("especie").populate("porte").populate("ong");        
     } catch (error) {
         res.status(500).send(error);
     }
