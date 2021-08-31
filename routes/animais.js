@@ -416,9 +416,9 @@ router.get('/animais/filtro', (req, res) => {
                             }
                         });
                     }                    
-                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: qtd, animais })
+                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: data.length, animais })
                 } else {
-                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: qtd, data })
+                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: data.length, data })
                 } 
             })
         }).populate("especie").populate("porte").populate("ong");
