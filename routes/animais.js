@@ -326,7 +326,7 @@ router.get('/animais', (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/animaisPost'
  */
- router.get('/animais/filtro', (req, res) => {
+/*  router.get('/animais/filtro', (req, res) => {
     try {
         let buscaAnimal = {};
         if(req.query.especie) {
@@ -371,6 +371,57 @@ router.get('/animais', (req, res) => {
                     res.status(200).send(docs);
                 }                
             });      
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}); */
+
+router.get('/animais/filtro', (req, res) => {
+    try {
+        let buscaAnimal = {};
+        if(req.query.especie) {
+            buscaAnimal.especie = req.query.especie;
+        }
+        if(req.query.porte) {
+            buscaAnimal.porte = req.query.porte;
+        }
+        if(req.query.sexo) {
+            buscaAnimal.sexo = req.query.sexo;
+        }
+        if(req.query.castrado) {
+            buscaAnimal.castrado = req.query.castrado;
+        }
+        if(req.query.vacinado) {
+            buscaAnimal.vacinado = req.query.vacinado;
+        }
+        if(req.query.vermifugado) {
+            buscaAnimal.vermifugado = req.query.vermifugado;
+        }
+
+        const {page = 1, limit = 10} = req.query;
+        animal.find(buscaAnimal, {}, (err, data) => {
+            animal.countDocuments((err, qtd) => {
+                if(req.query.estado) {
+                    let animais = [];
+                    if(req.query.cidade) {
+                        data.forEach(item => {
+                            if(item.ong.cidade === req.query.cidade && item.ong.estado === req.query.estado) {
+                                animais.push(item)
+                            }
+                        });
+                    }else {
+                        data.forEach(item => {
+                            if(item.ong.estado === req.query.estado) {
+                                animais.push(item)
+                            }
+                        });
+                    }                    
+                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), animais })
+                } else {
+                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), data })
+                } 
+            })
+        }).populate("especie").populate("porte").populate("ong");
     } catch (error) {
         res.status(500).send(error);
     }
