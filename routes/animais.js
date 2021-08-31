@@ -240,7 +240,7 @@ router.post('/animais', upload, async (req, res) => {
 
 router.get('/animais', (req, res) => {
     try {
-        const {page = 1, limit = 10} = req.query;
+        const {page = 1, limit = 12} = req.query;
 
         animal.find({}, {}, (err, data) => {
             animal.countDocuments((err, qtd) => {
@@ -398,7 +398,7 @@ router.get('/animais/filtro', (req, res) => {
             buscaAnimal.vermifugado = req.query.vermifugado;
         }
 
-        const {page = 1, limit = 10} = req.query;
+        const {page = 1, limit = 12} = req.query;
         animal.find(buscaAnimal, {}, (err, data) => {
             animal.countDocuments((err, qtd) => {
                 if(req.query.estado) {
