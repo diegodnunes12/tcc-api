@@ -416,7 +416,7 @@ router.get('/animais/filtro', (req, res) => {
                             }
                         });
                     }                    
-                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: data.length, animais })
+                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: animais.length, animais })
                 } else {
                     res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: data.length, data })
                 } 
