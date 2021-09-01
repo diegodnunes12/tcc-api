@@ -244,7 +244,7 @@ router.get('/animais', (req, res) => {
 
         animal.find({}, {}, (err, data) => {
             animal.countDocuments((err, qtd) => {
-                res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: qtd, animais: data })
+                res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: qtd, data: data })
             })
         }).limit(limit * 1).skip((page - 1) * limit).populate("especie").populate("porte").populate("ong");        
     } catch (error) {
@@ -416,9 +416,9 @@ router.get('/animais/filtro', (req, res) => {
                             }
                         });
                     }                    
-                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: animais.length, animais: animais })
+                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: animais.length, data: animais })
                 } else {
-                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: data.length, animais: data })
+                    res.status(200).send({ paginaAtual: page, paginas: Math.ceil(qtd/limit), total: data.length, data: data })
                 } 
             })
         }).populate("especie").populate("porte").populate("ong");
