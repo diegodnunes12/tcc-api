@@ -143,7 +143,7 @@ router.get('/contatos/:id', async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/contatos'
  */
- router.get('/contatos/ong/:ongId', async (req, res) => {
+router.get('/contatos/ong/:ongId', async (req, res) => {
     try {
         const _ongId = req.params.ongId;
         const getContatos = await contato.find({ ong: _ongId }).populate("animal").populate("ong");
@@ -199,6 +199,26 @@ router.delete('/contatos/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send(error);
     }
-} )
+} );
+
+
+router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
+    try {
+        const _ongId = req.params.ongId;
+        contato.find({ ong: _ongId }, {}, (err, data) => {
+            contato.countDocuments((err, qtd) => {
+                res.status(200).send({ 
+                    total: data.length,  
+                    totalSexo: {
+                        macho: data.filter(item => item.animal.sexo === "Macho").length, 
+                        femea: data.filter(item => item.animal.sexo === "Fêmea").length
+                    },
+                }) 
+            })
+        }).populate("animal").populate("ong");
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
 
 module.exports = router;
