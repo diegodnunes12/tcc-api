@@ -201,21 +201,37 @@ router.delete('/contatos/:id', async (req, res) => {
     }
 } );
 
-
+const animal = require('../models/animais');
 router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
     try {
         const _ongId = req.params.ongId;
+        /* animal.aggregate([
+            { $match: { sexo: /^Macho/ } },
+            {"$group" : {_id:"$sexo", count:{$sum:1}}},
+            {$project: {
+                sexo: '$_id', count: 1, _id: 0
+            }}
+        ]).then((animais) => {
+            animais.forEach(an => console.log(an))
+        })
+        .catch(e => console.log(e)) */
+
+
         contato.find({ ong: _ongId }, {}, (err, data) => {
-            contato.countDocuments((err, qtd) => {
-                res.status(200).send({ 
-                    total: data.length,  
-                    totalSexo: {
-                        macho: data.filter(item => item.animal.sexo === "Macho").length, 
-                        femea: data.filter(item => item.animal.sexo === "Fêmea").length
-                    },
-                }) 
+            res.status(200).send({ 
+                total: data.length,  
+                totalSexo: {
+                    macho: data.filter(item => item.animal.sexo === "Macho").length, 
+                    femea: data.filter(item => item.animal.sexo === "Fêmea").length
+                }
             })
-        }).populate("animal").populate("ong");
+        }).populate({
+            path: 'animal',
+            populate: [
+                { path: 'especie' },
+                { path: 'porte' },
+            ]            
+        }).populate("ong");
     } catch (error) {
         res.status(500).send(error);
     }
