@@ -201,10 +201,51 @@ router.delete('/contatos/:id', async (req, res) => {
     }
 } );
 
-const animal = require('../models/animais');
 router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
     try {
         const _ongId = req.params.ongId;
+        contato.aggregate([            
+            {
+                $lookup: {
+                    from: "animals",
+                    localField: "animal",
+                    foreignField: "_id",
+                    as: "animais"
+                }
+            },
+            {
+                $group: {
+                    _id: "$animais.sexo",
+                    count: {$sum: 1}
+                }
+            }
+        ]).then((a) => {
+            res.status(200).send(a)
+        })
+
+        /* contato.aggregate([
+            {$group: {_id: "$animal"}},
+            {$count: "animal"}
+        ]).then((a) => {
+            res.status(200).send(a)
+        }) */
+
+        /* contato.aggregate([
+            {
+                $lookup:
+                  {
+                    from: "animals",
+                    localField: "animal",
+                    foreignField: "_id",
+                    as: "teste"
+                  }
+             }
+        ]).then((a) => {
+            res.status(200).send(a)
+        }) */
+
+
+
         /* animal.aggregate([
             { $match: { sexo: /^Macho/ } },
             {"$group" : {_id:"$sexo", count:{$sum:1}}},
@@ -217,7 +258,8 @@ router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
         .catch(e => console.log(e)) */
 
 
-        contato.find({ ong: _ongId }, {}, (err, data) => {
+
+        /* contato.find({ ong: _ongId }, {}, (err, data) => {
             res.status(200).send({ 
                 total: data.length,  
                 totalSexo: {
@@ -231,7 +273,7 @@ router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
                 { path: 'especie' },
                 { path: 'porte' },
             ]            
-        }).populate("ong");
+        }).populate("ong"); */
     } catch (error) {
         res.status(500).send(error);
     }
