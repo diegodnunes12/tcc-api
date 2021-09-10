@@ -179,7 +179,15 @@ router.get('/contatos/ong/:ongId', async (req, res) => {
  router.get('/contatos/usuario/:usuarioId', async (req, res) => {
     try {
         const _usuarioId = req.params.usuarioId;
-        const getContatos = await contato.find({ "usuario._id": _usuarioId }).populate("animal").populate("ong");
+        const getContatos = await contato.find({ "usuario._id": _usuarioId })
+        .populate({
+            path: 'animal',
+            populate: [
+                { path: 'especie' },
+                { path: 'porte' },
+            ]            
+        })
+        .populate("ong");
         res.status(200).send(getContatos);
     } catch (error) {
         res.status(500).send(error);
