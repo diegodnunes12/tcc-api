@@ -15,9 +15,38 @@ var contatoSchema = new Schema ({
         }
     },
     animal: {
-        type: Schema.Types.ObjectId,
-        ref: "animal",
-        required:true
+        _id: {
+            type: Schema.Types.String,
+            required:true
+        },
+        nome: {
+            type: Schema.Types.String,
+            required:true
+        },
+        sexo: {
+            type: Schema.Types.String,
+            required:true
+        },
+        especie: {
+            _id: {
+                type: Schema.Types.String,
+                required:true
+            },
+            nome: {
+                type: Schema.Types.String,
+                required:true
+            },
+        },
+        porte: {
+            _id: {
+                type: Schema.Types.String,
+                required:true
+            },
+            nome: {
+                type: Schema.Types.String,
+                required:true
+            },
+        },
     },
     usuario: {
         _id: {
