@@ -146,14 +146,14 @@ router.get('/contatos/:id', async (req, res) => {
 router.get('/contatos/ong/:ongId', async (req, res) => {
     try {
         const _ongId = req.params.ongId;
-        const getContatos = await contato.find({ ong: _ongId })
-        .populate({
+        const getContatos = await contato.find({ ong: _ongId }).populate("ong");
+/*         .populate({
             path: 'animal',
             populate: [
                 { path: 'especie' },
                 { path: 'porte' },
             ]            
-        }).populate("ong");
+        }) */
         res.status(200).send(getContatos);
     } catch (error) {
         res.status(500).send(error);
