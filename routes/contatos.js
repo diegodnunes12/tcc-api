@@ -160,6 +160,16 @@ router.get('/contatos/ong/:ongId', async (req, res) => {
     }
 });
 
+router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
+    try {
+        const _ongId = req.params.ongId;
+        const getContatos = await contato.find({ ong: _ongId }).populate("ong");
+        res.status(200).send(getContatos);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 /**
  * @swagger
  * /contatos/usuario/{usuarioId}:
@@ -207,83 +217,5 @@ router.delete('/contatos/:id', async (req, res) => {
         res.status(500).send(error);
     }
 } );
-
-router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
-    try {
-        const _ongId = req.params.ongId;
-        contato.aggregate([            
-            {
-                $lookup: {
-                    from: "animals",
-                    localField: "animal",
-                    foreignField: "_id",
-                    as: "animais"
-                }
-            },
-            {
-                $group: {
-                    _id: "$animais.sexo",
-                    count: {$sum: 1}
-                }
-            }
-        ]).then((a) => {
-            res.status(200).send(a)
-        })
-
-        /* contato.aggregate([
-            {$group: {_id: "$animal"}},
-            {$count: "animal"}
-        ]).then((a) => {
-            res.status(200).send(a)
-        }) */
-
-        /* contato.aggregate([
-            {
-                $lookup:
-                  {
-                    from: "animals",
-                    localField: "animal",
-                    foreignField: "_id",
-                    as: "teste"
-                  }
-             }
-        ]).then((a) => {
-            res.status(200).send(a)
-        }) */
-
-
-
-        /* animal.aggregate([
-            { $match: { sexo: /^Macho/ } },
-            {"$group" : {_id:"$sexo", count:{$sum:1}}},
-            {$project: {
-                sexo: '$_id', count: 1, _id: 0
-            }}
-        ]).then((animais) => {
-            animais.forEach(an => console.log(an))
-        })
-        .catch(e => console.log(e)) */
-
-
-
-        /* contato.find({ ong: _ongId }, {}, (err, data) => {
-            res.status(200).send({ 
-                total: data.length,  
-                totalSexo: {
-                    macho: data.filter(item => item.animal.sexo === "Macho").length, 
-                    femea: data.filter(item => item.animal.sexo === "Fêmea").length
-                }
-            })
-        }).populate({
-            path: 'animal',
-            populate: [
-                { path: 'especie' },
-                { path: 'porte' },
-            ]            
-        }).populate("ong"); */
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
 
 module.exports = router;
