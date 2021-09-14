@@ -162,8 +162,10 @@ router.get('/contatos/ong/:ongId', async (req, res) => {
 
 router.get('/contatos/relatorios/ong/:ongId', async (req, res) => {
     try {
+        const dataInicial = new Date(req.query.dataInicial)
+        const dataFinal = new Date(req.query.dataFinal)
         const _ongId = req.params.ongId;
-        const getContatos = await contato.find({ ong: _ongId }).populate("ong");
+        const getContatos = await contato.find({ ong: _ongId, data_contato: { $gte: dataInicial, $lt: dataFinal } }).populate("ong");
         res.status(200).send(getContatos);
     } catch (error) {
         res.status(500).send(error);
