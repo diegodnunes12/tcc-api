@@ -129,6 +129,31 @@ router.get('/mensagens/contato/:contatoId', async (req, res) => {
     }
 } );
 
+router.patch('/mensagens/:id', async (req, res) => {
+    const _mensagemId = req.params.id;    
+    const dataUpdate = Object.keys(req.body);
+    const allowedUpdate = ['texto'];
+    const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
+
+    if(!isValidationOperation){
+        return res.status(400).send({error: 'Não foi possivel alterar algum campo especifico'});
+    }
+    else{
+        try {
+            const updateMensagem = await mensagem.findByIdAndUpdate(_mensagemId, req.body, {new: true, runValidators: true});
+
+            if(!updateMensagem){
+                return res.status(404).send('Mensagem não encontrada');
+            }
+            else{
+                res.send(updateMensagem);
+            }
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    }
+} )
+
 router.delete('/mensagens/:id', async (req, res) => {    
     try {
         const deleteMensagem = await mensagem.findByIdAndDelete(req.params.id);
