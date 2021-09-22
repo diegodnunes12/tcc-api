@@ -122,11 +122,11 @@ const router = new express.Router();
  */
  router.post('/usuarios-ong/login', async (req, res) => {
     try {
-        const getUsuario = await usuarioOng.findOne({ email: req.body.email, senha: req.body.senha });
+        const getUsuario = await usuarioOng.findOne({ email: req.body.email, senha: req.body.senha }).populate("tipo_usuario");
         if(!getUsuario) {            
             res.status(404).send("Usuário não encontrado");
         }else {
-            const token = jwt.sign({sub: getUsuario._id, email: getUsuario.email, name: getUsuario.nome, ong: getUsuario.ong}, SECRET, { expiresIn: 9000 });
+            const token = jwt.sign({sub: getUsuario._id, email: getUsuario.email, name: getUsuario.nome, ong: getUsuario.ong, tipo: getUsuario.tipo_usuario.nome}, SECRET, { expiresIn: 9000 });
             res.status(200).send({auth: true, token});
         }
     } catch (error) {
