@@ -74,24 +74,32 @@ router.post('/campanhas', async (req, res) => {
 
 /**
  * @swagger
- * /campanhas:
+ * /campanhas/ong/{ongId}:
  *   get:
- *     summary: Retorna todos as campanhas criadas
+ *     summary: Retorna todos as campanhas de uma ong
  *     tags: [Campanhas]
+ *     parameters:
+ *       - in: path
+ *         name: ongId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da ong
  *     responses:
  *       200:
- *         description: Lista todas as campanhas
+ *         description: Lista todas as campanhas de uma ong
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/campanhas'
+ *                 $ref: '#/components/schemas/animaisPost'
  */
-router.get('/campanhas', async (req, res) => {
+ router.get('/campanhas/ong/:ongId', async (req, res) => {
     try {
-        const getCampanha = await campanha.find({});
-        res.status(200).send(getCampanha);
+        const _ongId = req.params.ongId;
+        const getCampanhas = await campanha.find({ ong: _ongId }).populate("ong");
+        res.status(200).send(getCampanhas);
     } catch (error) {
         res.status(500).send(error);
     }

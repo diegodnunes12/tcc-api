@@ -30,6 +30,11 @@ var campanhasSchema = new Schema ({
     ativo: {
         type: boolean,
         required: true
+    },
+    ong:{
+        type: Schema.Types.ObjectId,
+        ref: "ong",
+        required:true
     }
 });
 
