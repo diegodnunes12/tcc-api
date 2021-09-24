@@ -63,6 +63,7 @@ app.use(routers.usuariosOng);
 app.use(routers.tipoUsuario);
 app.use(routers.contatos);
 app.use(routers.mensagens);
+app.use(routers.campanhas);
 
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser:true,

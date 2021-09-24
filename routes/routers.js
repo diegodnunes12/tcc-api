@@ -8,4 +8,5 @@ module.exports = {
     tipoUsuario: require('./tipo-usuario'),
     contatos: require('./contatos'),
     mensagens: require('./mensagens'),
+    campanhas: require('./campanhas'),
 }
