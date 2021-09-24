@@ -14,6 +14,7 @@ const router = new express.Router();
  *         - descicao
  *         - valor
  *         - chave_pix
+ *         - ativo
  *       properties:
  *         nome:
  *           type: string
@@ -27,6 +28,9 @@ const router = new express.Router();
  *         chave_pix:
  *           type: string
  *           description: chave do pix
+ *         ativo:
+ *           type: boolean
+ *           description: Informa se a campanha está ativa
  */
 
  /**

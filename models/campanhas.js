@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+const { boolean } = require("yup/lib/locale");
 
 const Schema = mongoose.Schema;
 
@@ -26,6 +27,10 @@ var campanhasSchema = new Schema ({
         required:true,
         maxlength: 50,
     },
+    ativo: {
+        type: boolean,
+        required: true
+    }
 });
 
 var campanhas = mongoose.model("campanhas", campanhasSchema);
