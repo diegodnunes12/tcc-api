@@ -147,7 +147,7 @@ router.get('/campanhas/:id', async (req, res) => {
 
 router.patch('/campanhas/:id', async (req, res) => {    
     const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'descricao', 'valor', 'chave_pix'];
+    const allowedUpdate = ['nome', 'descricao', 'valor', 'chave_pix', 'ativo'];
     const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
     if(!isValidationOperation){
