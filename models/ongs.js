@@ -62,6 +62,9 @@ var ongSchema = new Schema ({
             }
         }
     },
+    imagem: {
+        type: String
+    }
 });
 
 var ong = mongoose.model("ong", ongSchema);

@@ -1,5 +1,36 @@
 const express = require('express');
 const ong = require('../models/ongs');
+const multer = require('multer');
+const AWS = require('aws-sdk');
+require('dotenv').config();
+const { v4: uuidv4 } = require('uuid');
+
+const storage = multer.memoryStorage({
+    destination: function(req, file, callback) {
+        callback(null, '')
+    }
+});
+
+const upload = multer({ storage }).single('imagem');
+
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ID,
+    secretAccessKey: process.env.AWS_SECRET
+});
+
+const jwt = require('jsonwebtoken');
+const SECRET = 'adoteja';
+
+function verifyJwt(req, res, next) {
+    const token = req.headers['x-access-token'];
+    jwt.verify(token, SECRET, (err, decoded) => {
+        if(err) return res.status(401).end();
+        req.usuario = decoded.usuario;
+        req.ong = decoded.ong;
+
+        next();
+    });
+}
 
 const router = new express.Router();
 
@@ -309,9 +340,27 @@ router.get('/ongs/:id', async (req, res) => {
  *      500:
  *        description: Não foi possível alterar a ong
  */
-router.patch('/ongs/:id', async (req, res) => {    
+router.patch('/ongs/:id', upload, async (req, res) => {   
+    let imageName = "";
+    if(req.file) {
+        let file = req.file.originalname.split(".");
+        const fileType = file[file.length - 1];
+        imageName = `${uuidv4()}.${fileType}`; 
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: `imagens/${imageName}`,
+            Body: req.file.buffer,
+            ACL:'public-read'
+        }
+        s3.upload(params, (error, data) => {
+            if(error) {
+                res.status(500).send(error)
+            }        
+        });
+    }
+
     const dataUpdate = Object.keys(req.body);
-    const allowedUpdate = ['nome', 'telefone', 'email', 'facebook', 'instagram', 'cidade', 'estado'];
+    const allowedUpdate = ['nome', 'telefone', 'email', 'facebook', 'instagram', 'cidade', 'estado', 'imagem'];
     const isValidationOperation = dataUpdate.every( (dataUpdate) => allowedUpdate.includes(dataUpdate));
 
     if(!isValidationOperation){
@@ -319,6 +368,10 @@ router.patch('/ongs/:id', async (req, res) => {
     }
     else{
         try {
+            if(req.file) {
+                req.body.imagem = imageName;
+            }
+            
             const updateOng = await ong.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
 
             if(!updateOng){
