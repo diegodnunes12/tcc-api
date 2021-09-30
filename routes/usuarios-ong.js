@@ -285,6 +285,44 @@ const router = new express.Router();
     }
 });
 
+router.post('/usuarios-ong/recuperar-senha/:email', async (req, res) => {
+    try {
+        const email = req.params.email;
+        const getUsuario = await usuarioOng.find({ email: email });
+        if(getUsuario.length > 0) {
+            let transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 587,
+                secure: false,                
+                auth: {
+                    user: 'adotejatcc@gmail.com',
+                    pass: process.env.SENHA_GMAIL,
+                },
+                tls: {
+                    rejectUnauthorized: false,
+                },
+            });
+
+            transporter.sendMail({
+                from: "Adote Já! <adotejatcc@gmail.com>",
+                to: email,
+                subject: "Recuperar senha",
+                html: `Olá, ${getUsuario[0].nome}<br>Você solicitou a recuperação de sua senha. Para criar uma nova senha <a href=''>Clique aqui</a>.` 
+            }).then(message => {
+                console.log(getUsuario)
+            }).catch(err => {
+                console.log(err)
+            })
+
+            res.status(200).send(true);
+        }else {
+            res.status(404).send('Usuário não encontrado');
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 /**
  * @swagger
  * /usuarios-ong/{id}:
