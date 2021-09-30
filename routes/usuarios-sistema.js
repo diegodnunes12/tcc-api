@@ -197,6 +197,7 @@ router.post('/usuarios-sistema', async (req, res) => {
 
 router.post('/usuarios-sistema/recuperar-senha/:email', async (req, res) => {
     try {
+        const url = `https://tcc-frontend-seven.vercel.app/sistema/${getUsuario[0]._id}`;
         const email = req.params.email;
         const getUsuario = await usuarioSistema.find({ email: email });
         if(getUsuario.length > 0) {
@@ -217,7 +218,7 @@ router.post('/usuarios-sistema/recuperar-senha/:email', async (req, res) => {
                 from: "Adote Já! <adotejatcc@gmail.com>",
                 to: email,
                 subject: "Recuperar senha",
-                html: `Olá, ${getUsuario[0].nome}<br>Você solicitou a recuperação de sua senha. Para criar uma nova senha <a href=''>Clique aqui</a>.` 
+                html: `Olá, ${getUsuario[0].nome}<br>Você solicitou a recuperação de sua senha. Para criar uma nova senha <a href='${url}'>Clique aqui</a>.` 
             }).then(message => {
                 console.log(getUsuario)
             }).catch(err => {
