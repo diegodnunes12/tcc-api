@@ -200,7 +200,7 @@ router.post('/usuarios-sistema/recuperar-senha/:email', async (req, res) => {
         const email = req.params.email;
         const getUsuario = await usuarioSistema.find({ email: email });
         if(getUsuario.length > 0) {
-            const url = `https://tcc-frontend-seven.vercel.app/sistema/${getUsuario[0]._id}`;
+            const url = `https://tcc-frontend-seven.vercel.app/sistema/nova-senha/${getUsuario[0]._id}`;
             let transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 587,
