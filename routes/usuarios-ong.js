@@ -286,11 +286,11 @@ const router = new express.Router();
 });
 
 router.post('/usuarios-ong/recuperar-senha/:email', async (req, res) => {
-    try {
-        const url = `https://tcc-frontend-seven.vercel.app/admin/${getUsuario[0]._id}`;
+    try {        
         const email = req.params.email;
         const getUsuario = await usuarioOng.find({ email: email });
         if(getUsuario.length > 0) {
+            const url = `https://tcc-frontend-seven.vercel.app/admin/${getUsuario[0]._id}`;
             let transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 587,
