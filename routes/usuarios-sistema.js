@@ -125,6 +125,19 @@ router.post('/usuarios-sistema', async (req, res) => {
     }
 });
 
+router.post('/usuarios-sistema/verifica-senha', async (req, res) => {
+    try {
+        const getUsuario = await usuarioSistema.findOne({ email: req.body.email, senha: req.body.senha });
+        if(!getUsuario) {            
+            res.status(404).send({ senha: 'invalida', valido: false });
+        }else {
+            res.status(200).send({ senha: 'valido', valido: true });
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 /**
  * @swagger
  * /usuarios-sistema/{id}:
