@@ -134,6 +134,28 @@ const router = new express.Router();
     }
 });
 
+/**
+ * @swagger
+ * /usuarios-ong/verifica-senha:
+ *   post:
+ *     summary: Verifica a senha
+ *     tags: [UsuariosOng]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/usuariosLogin'
+ *     responses:
+ *       200:
+ *         description: usuário verificado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/usuariosLogin'
+ *       500:
+ *         description: Não foi possível verificar
+ */
 router.post('/usuarios-ong/verifica-senha', async (req, res) => {
     try {
         const getUsuario = await usuarioOng.findOne({ email: req.body.email, senha: req.body.senha });

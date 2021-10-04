@@ -316,6 +316,36 @@ router.get('/animais', (req, res) => {
  *           type: string
  *         required: false
  *         description: id do sexo do animal
+ *       - in: query
+ *         name: vermifugado
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Animal vermifugado
+ *       - in: query
+ *         name: castrado
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Animal castrado
+ *       - in: query
+ *         name: vacinado
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Animal vacinado
+ *       - in: query
+ *         name: estado
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: UF
+ *       - in: query
+ *         name: cidade
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: cidade
  *     responses:
  *       200:
  *         description: Lista todas os animais pela busca
@@ -326,56 +356,6 @@ router.get('/animais', (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/animaisPost'
  */
-/*  router.get('/animais/filtro', (req, res) => {
-    try {
-        let buscaAnimal = {};
-        if(req.query.especie) {
-            buscaAnimal.especie = req.query.especie;
-        }
-        if(req.query.porte) {
-            buscaAnimal.porte = req.query.porte;
-        }
-        if(req.query.sexo) {
-            buscaAnimal.sexo = req.query.sexo;
-        }
-        if(req.query.castrado) {
-            buscaAnimal.castrado = req.query.castrado;
-        }
-        if(req.query.vacinado) {
-            buscaAnimal.vacinado = req.query.vacinado;
-        }
-        if(req.query.vermifugado) {
-            buscaAnimal.vermifugado = req.query.vermifugado;
-        }
-
-        animal.find(buscaAnimal).populate("especie").populate("porte").populate("ong")
-            .exec(function (err, docs) {
-                if (err) return handleError(err);
-                if(req.query.estado) {
-                    let animais = [];
-                    if(req.query.cidade) {
-                        docs.forEach(item => {
-                            if(item.ong.cidade === req.query.cidade && item.ong.estado === req.query.estado) {
-                                animais.push(item)
-                            }
-                        });
-                    }else {
-                        docs.forEach(item => {
-                            if(item.ong.estado === req.query.estado) {
-                                animais.push(item)
-                            }
-                        });
-                    }                    
-                    res.status(200).send(animais);
-                } else {
-                    res.status(200).send(docs);
-                }                
-            });      
-    } catch (error) {
-        res.status(500).send(error);
-    }
-}); */
-
 router.get('/animais/filtro', (req, res) => {
     try {
         let buscaAnimal = {};

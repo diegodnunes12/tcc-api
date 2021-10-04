@@ -125,6 +125,28 @@ router.post('/usuarios-sistema', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /usuarios-sistema/verifica-senha:
+ *   post:
+ *     summary: Verifica a senha
+ *     tags: [UsuariosSistema]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/usuariosLogin'
+ *     responses:
+ *       200:
+ *         description: usuário verificado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/usuariosLogin'
+ *       500:
+ *         description: Não foi possível verificar
+ */
 router.post('/usuarios-sistema/verifica-senha', async (req, res) => {
     try {
         const getUsuario = await usuarioSistema.findOne({ email: req.body.email, senha: req.body.senha });

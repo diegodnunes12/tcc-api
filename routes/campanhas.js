@@ -93,7 +93,7 @@ router.post('/campanhas', async (req, res) => {
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/animaisPost'
+ *                 $ref: '#/components/schemas/campanhas'
  */
  router.get('/campanhas/ong/:ongId', async (req, res) => {
     try {
@@ -145,6 +145,39 @@ router.get('/campanhas/:id', async (req, res) => {
     }
 } )
 
+/**
+ * @swagger
+ * /campanhas/{id}:
+ *  patch:
+ *    summary: Altera uma campanha
+ *    tags: [Campanhas]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: id da campanha
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Campanhas'
+ *    responses:
+ *      200:
+ *        description: Campanha alterada com sucesso
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Campanhas'
+ *      400:
+ *        description: Não foi possivel alterar algum campo especifico
+ *      404:
+ *        description: Campanha não encontrada
+ *      500:
+ *        description: Não foi possível alterar a Campanha
+ */
 router.patch('/campanhas/:id', async (req, res) => {    
     const dataUpdate = Object.keys(req.body);
     const allowedUpdate = ['nome', 'descricao', 'valor', 'chave_pix', 'ativo'];
@@ -169,6 +202,28 @@ router.patch('/campanhas/:id', async (req, res) => {
     }
 } )
 
+/**
+ * @swagger
+ * /campanhas/{id}:
+ *   delete:
+ *     summary: Remove uma campanha
+ *     tags: [Campanhas]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da campanha
+ * 
+ *     responses:
+ *       200:
+ *         description: Campanha removida com sucesso
+ *       404:
+ *         description: Campanha não encontrada
+ *       500:
+ *         description: Não foi possível deletar a campanha
+ */
 router.delete('/campanhas/:id', async (req, res) => {    
     try {
         const deleteCampanha = await campanha.findByIdAndDelete(req.params.id);

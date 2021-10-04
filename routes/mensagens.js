@@ -81,6 +81,31 @@ router.get('/mensagens', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /mensagens/{id}:
+ *   get:
+ *     summary: Recupera uma Mensagem pelo id
+ *     tags: [Mensagens]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da Mensagem
+ *     responses:
+ *       200:
+ *         description: Mensagem pelo id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Mensagens'
+ *       404:
+ *         description: Mensagem não encontrada
+ *       500:
+ *         description: Não foi possível listar a Mensagem
+ */
 router.get('/mensagens/:id', async (req, res) => {
     const _id = req.params.id;
     try {
@@ -129,6 +154,39 @@ router.get('/mensagens/contato/:contatoId', async (req, res) => {
     }
 } );
 
+/**
+ * @swagger
+ * /mensagens/{id}:
+ *  patch:
+ *    summary: Altera uma mensagem
+ *    tags: [Mensagens]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: id da mensagem
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Mensagens'
+ *    responses:
+ *      200:
+ *        description: Mensagem alterada com sucesso
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Mensagens'
+ *      400:
+ *        description: Não foi possivel alterar algum campo especifico
+ *      404:
+ *        description: Mensagem não encontrada
+ *      500:
+ *        description: Não foi possível alterar a Mensagem
+ */
 router.patch('/mensagens/:id', async (req, res) => {
     const _mensagemId = req.params.id;    
     const dataUpdate = Object.keys(req.body);
@@ -154,6 +212,28 @@ router.patch('/mensagens/:id', async (req, res) => {
     }
 } )
 
+/**
+ * @swagger
+ * /mensagns/{id}:
+ *   delete:
+ *     summary: Remove uma mensagem
+ *     tags: [Mensagens]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: id da Mensagem
+ * 
+ *     responses:
+ *       200:
+ *         description: Mensagem removida com sucesso
+ *       404:
+ *         description: Mensagem não encontrada
+ *       500:
+ *         description: Não foi possível deletar a mensagem
+ */
 router.delete('/mensagens/:id', async (req, res) => {    
     try {
         const deleteMensagem = await mensagem.findByIdAndDelete(req.params.id);
